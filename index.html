@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="th">
 <head>
   <meta charset="UTF-8">
@@ -1068,38 +1068,422 @@
     // ==========================================
     // BLOOD CULTURE LOGIC (Prefixed with bc_)
     // ==========================================
-    // WINDOW ONLOAD (INITIALIZE ALL APPS)
-    // ==========================================
-    window.onload = function() {
-      const today = new Date().toISOString().split('T')[0];
-      const now = new Date(); 
-      const timeString = now.toTimeString().slice(0,5);
-
-      // INIT APP 1: BLOOD CULTURE
-      bc_generateChecklistForm();
-      document.getElementById('bc_evalDate').value = today; bc_currentRecord.date = today;
-      document.getElementById('bc_evalTime').value = timeString; bc_currentRecord.evalTime = timeString;
-      document.getElementById('bc_filterMonthVal').value = today.slice(0, 7); document.getElementById('bc_filterStartVal').value = today; document.getElementById('bc_filterEndVal').value = today;
-      if (bc_db.apiUrl) document.getElementById('bc_apiEndpointUrl').value = bc_db.apiUrl;
-      if(bc_db.apiUrl) bc_fetchDataFromSheet().then(() => { bc_renderHistory(); bc_renderReports(); });
-      bc_updateUnsyncedBadge(); bc_updateStatusBadge(); bc_renderHistory(); bc_renderReports();
-
-      // INIT APP 2: MDR
-      mdr_generateChecklistForm();
-      document.getElementById('mdr_evalDate').value = today; mdr_currentRecord.date = today;
-      document.getElementById('mdr_filterMonthVal').value = today.slice(0, 7); document.getElementById('mdr_filterStartVal').value = today; document.getElementById('mdr_filterEndVal').value = today;
-      if (mdr_db.apiUrl) document.getElementById('mdr_apiEndpointUrl').value = mdr_db.apiUrl;
-      if(mdr_db.apiUrl) mdr_fetchDataFromSheet().then(() => { mdr_renderHistory(); mdr_renderReports(); });
-      mdr_updateUnsyncedBadge(); mdr_updateStatusBadge(); mdr_renderHistory(); mdr_renderReports();
-
-      // INIT APP 3: CAUTI
-      cauti_generateChecklistForm();
-      document.getElementById('cauti_evalDate').value = today; cauti_currentRecord.date = today;
-      document.getElementById('cauti_filterMonthVal').value = today.slice(0, 7); document.getElementById('cauti_filterStartVal').value = today; document.getElementById('cauti_filterEndVal').value = today;
-      if (cauti_db.apiUrl) document.getElementById('cauti_apiEndpointUrl').value = cauti_db.apiUrl;
-      if(cauti_db.apiUrl) cauti_fetchDataFromSheet().then(() => { cauti_renderHistory(); cauti_renderReports(); });
-      cauti_updateUnsyncedBadge(); cauti_updateStatusBadge(); cauti_renderHistory(); cauti_renderReports();
+    const bc_TOTAL_ITEMS = 15;
+    const bc_checkListData = {
+      1: "ตรวจสอบคำสั่งแพทย์ถูกต้อง",
+      2: "เตรียมอุปกรณ์ครบถ้วน ตรวจสอบวันหมดอายุขวดเพาะเชื้อ",
+      3: "ล้างมือถูกวิธีและใส่ถุงมือสะอาด",
+      4: "เปิดฝาขวดเช็ดด้วย 70% alcohol",
+      5: "ทำความสะอาดผิวหนังด้วย 70% alcohol โดยออกแรงถูเล็กน้อย",
+      6: "เช็ดผิวหนังด้วย 2% chlorhexidine in alcohol วนจากในออกนอกอย่างน้อย 5 ซม.",
+      7: "ปล่อยให้แห้งอย่างน้อย 30 วินาที",
+      8: "ไม่สัมผัสบริเวณที่ทำความสะอาดแล้ว",
+      9: "เจาะเลือดจากหลอดเลือดดำ",
+      10: "เก็บเลือดตามปริมาณที่กำหนด 5-10 ml/ขวด",
+      11: "ใส่เลือดลงขวดตามลำดับ โดยไม่ให้ปลายเข็มสัมผัสน้ำยาเพาะเชื้อ (ไม่ต้องเปลี่ยนเข็ม)",
+      12: "ติดฉลากขวดถูกต้อง",
+      13: "ระบุเวลาที่เจาะเลือด",
+      14: "ส่งเลือดตรวจภายใน 2 ชม.",
+      15: "บันทึกในเวชระเบียนครบถ้วน"
     };
+
+    const bc_defaultItems = {};
+    for(let i=1; i<=bc_TOTAL_ITEMS; i++) bc_defaultItems[i] = null;
+    const bc_GLOBAL_DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbw-aXrC2Mz5homHac2-7unrsVr8Obp0ad_rKRr7vS5eJxKOIGaHJaS3yNotDDjDBmDjmA/exec";
+
+    let bc_db = {
+      records: JSON.parse(localStorage.getItem('bloodculture_records')) || [],
+      apiUrl: localStorage.getItem('bloodculture_api_url') || bc_GLOBAL_DEFAULT_API_URL
+    };
+
+    let bc_comparisonChartInstance = null;
+    let bc_currentFilterType = 'all';
+    let bc_currentRecord = { id: '', date: '', department: '', patientName: '', practitioner: '', evaluator: '', evalTime: '', items: {...bc_defaultItems}, complianceRate: 0, remarks: '', synced: false, timestamp: null };
+    let bc_activeConfirmCallback = null;
+
+    function bc_generateChecklistForm() {
+      const container = document.getElementById('bc_bundleForm');
+      let html = '';
+      for (let i = 1; i <= bc_TOTAL_ITEMS; i++) {
+        html += `
+          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:border-blue-200 transition-all card-bundle-item" data-index="${i}">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div class="space-y-1">
+                <div class="flex items-center space-x-2">
+                  <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-blue-100 text-blue-700 font-bold text-sm flex-shrink-0 mt-0.5">${i}</span>
+                  <h3 class="font-bold text-slate-800 text-base md:text-md leading-relaxed w-full pt-1.5 md:pt-1">${bc_checkListData[i]}</h3>
+                </div>
+              </div>
+              <div class="flex items-center space-x-3 pl-9 md:pl-0">
+                <button onclick="bc_setItemValue(${i}, 'ปฏิบัติ')" class="btn-check-yes w-24 py-2 rounded-xl border border-slate-200 hover:border-blue-500 font-semibold text-slate-500 hover:bg-slate-50 transition-all text-sm flex items-center justify-center space-x-1">
+                  <span class="icon-dot w-2 h-2 rounded-full bg-slate-300"></span>
+                  <span>ปฏิบัติ</span>
+                </button>
+                <button onclick="bc_setItemValue(${i}, 'ไม่ปฏิบัติ')" class="btn-check-no w-28 py-2 rounded-xl border border-slate-200 hover:border-yellow-500 font-semibold text-slate-500 hover:bg-slate-50 transition-all text-sm flex items-center justify-center space-x-1">
+                  <span class="icon-dot w-2 h-2 rounded-full bg-slate-300"></span>
+                  <span>ไม่ปฏิบัติ</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      container.innerHTML = html;
+    }
+
+    function bc_setItemValue(itemNum, value) {
+      bc_currentRecord.items[itemNum] = value;
+      const card = document.querySelector(`#app-bc .card-bundle-item[data-index="${itemNum}"]`);
+      const yesBtn = card.querySelector('.btn-check-yes');
+      const noBtn = card.querySelector('.btn-check-no');
+
+      if (value === 'ปฏิบัติ') {
+        yesBtn.className = "btn-check-yes w-24 py-2 rounded-xl border-2 border-emerald-500 bg-emerald-50 font-bold text-emerald-700 transition-all text-sm flex items-center justify-center space-x-1 shadow-sm";
+        yesBtn.querySelector('.icon-dot').className = "icon-dot w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
+        noBtn.className = "btn-check-no w-28 py-2 rounded-xl border border-slate-200 font-semibold text-slate-500 hover:bg-slate-50 transition-all text-sm flex items-center justify-center space-x-1";
+        noBtn.querySelector('.icon-dot').className = "icon-dot w-2 h-2 rounded-full bg-slate-300";
+      } else if (value === 'ไม่ปฏิบัติ') {
+        yesBtn.className = "btn-check-yes w-24 py-2 rounded-xl border border-slate-200 font-semibold text-slate-400 hover:bg-slate-50 transition-all text-sm flex items-center justify-center space-x-1";
+        yesBtn.querySelector('.icon-dot').className = "icon-dot w-2 h-2 rounded-full bg-slate-300";
+        noBtn.className = "btn-check-no w-28 py-2 rounded-xl border-2 border-yellow-500 bg-yellow-50 font-bold text-yellow-700 transition-all text-sm flex items-center justify-center space-x-1 shadow-sm";
+        noBtn.querySelector('.icon-dot').className = "icon-dot w-2.5 h-2.5 rounded-full bg-yellow-500 animate-pulse";
+      }
+      bc_calculateLiveScore();
+    }
+
+    function bc_calculateLiveScore() {
+      let totalYes = 0;
+      for (let i=1; i<=bc_TOTAL_ITEMS; i++) if (bc_currentRecord.items[i] === 'ปฏิบัติ') totalYes++;
+      const score = Number(((totalYes / bc_TOTAL_ITEMS) * 100).toFixed(2)); 
+      bc_currentRecord.complianceRate = score;
+      document.getElementById('bc_liveScoreText').innerText = `${score.toFixed(2)}% (${totalYes}/${bc_TOTAL_ITEMS})`;
+      const ring = document.getElementById('bc_scoreIndicatorRing');
+      ring.innerText = `${totalYes}/${bc_TOTAL_ITEMS}`;
+      if (score === 100) ring.className = "w-10 h-10 rounded-full border-2 border-blue-300 bg-blue-700 flex items-center justify-center font-bold text-sm text-white shadow-md shadow-blue-200";
+      else if (score >= 80) ring.className = "w-10 h-10 rounded-full border-2 border-blue-400 bg-blue-600 flex items-center justify-center font-bold text-sm text-white";
+      else if (score > 0) ring.className = "w-10 h-10 rounded-full border-2 border-yellow-400 bg-yellow-500 flex items-center justify-center font-bold text-sm text-white";
+      else ring.className = "w-10 h-10 rounded-full border-2 border-slate-300 flex items-center justify-center font-bold text-sm";
+    }
+
+    async function bc_fetchDataFromSheet() {
+      if (!bc_db.apiUrl) return false;
+      try {
+        const response = await fetch(bc_db.apiUrl + '?action=fetch', { method: 'GET' });
+        const raw = await response.json();
+        if (!Array.isArray(raw) || raw.length < 2) return false;
+        const sheetRecords = [];
+        for (let i = 1; i < raw.length; i++) {
+          const row = raw[i];
+          if (!row[1]) continue; 
+          let dateVal = String(row[1] || '').slice(0, 10);
+          if (dateVal.length > 10 || isNaN(Date.parse(dateVal))) {
+            const d = new Date(row[1]); if (!isNaN(d)) dateVal = d.toISOString().slice(0, 10);
+          }
+          let rate = parseFloat(row[bc_TOTAL_ITEMS + 7]) || 0;
+          if (rate > 0 && rate <= 1) rate = Number((rate * 100).toFixed(2)); else rate = Number(rate.toFixed(2));
+          const getItem = (val) => { const s = String(val || '').trim(); return (s === 'ปฏิบัติ' || s === 'ไม่ปฏิบัติ') ? s : null; };
+          const itemsParsed = {};
+          for(let j=1; j<=bc_TOTAL_ITEMS; j++) itemsParsed[j] = getItem(row[j+6]);
+          sheetRecords.push({ id: `SHEET_${i}_${dateVal}`, date: dateVal, timestamp: String(row[0]), department: String(row[2] || ''), patientName: String(row[3] || ''), practitioner: String(row[4] || ''), evaluator: String(row[5] || ''), evalTime: String(row[6] || ''), items: itemsParsed, complianceRate: rate, remarks: String(row[bc_TOTAL_ITEMS + 8] || ''), synced: true });
+        }
+        if (sheetRecords.length === 0) return false;
+        const localUnsynced = bc_db.records.filter(r => !r.synced);
+        bc_db.records = [...sheetRecords, ...localUnsynced];
+        localStorage.setItem('bloodculture_records', JSON.stringify(bc_db.records));
+        return true;
+      } catch (err) { console.error('Fetch Error:', err); return false; }
+    }
+
+    async function bc_fetchAndRenderReports() {
+      const refreshIcon = document.getElementById('bc_refreshIcon');
+      if (refreshIcon) refreshIcon.classList.add('animate-spin');
+      const success = await bc_fetchDataFromSheet();
+      if (refreshIcon) refreshIcon.classList.remove('animate-spin');
+      bc_renderReports(); bc_renderHistory(); bc_updateUnsyncedBadge();
+      const now = new Date(); const timeStr = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+      const lastUpdatedEl = document.getElementById('bc_dashboardLastUpdated');
+      if (success) { if (lastUpdatedEl) lastUpdatedEl.innerHTML = `<span class="text-blue-600 font-semibold">✓ อัปเดตล่าสุด: ${timeStr}</span>`; }
+      else { if (lastUpdatedEl) lastUpdatedEl.innerHTML = `<span class="text-yellow-600 font-semibold">⚠ ทำงานแบบออฟไลน์</span>`; }
+    }
+
+    function bc_switchTab(tabName) {
+      document.querySelectorAll('#app-bc .tab-btn').forEach(btn => {
+        btn.classList.remove('border-blue-600', 'text-blue-600', 'font-semibold'); btn.classList.add('border-transparent', 'text-slate-500');
+      });
+      document.querySelectorAll('#app-bc .tab-content').forEach(content => content.classList.add('hidden'));
+      document.getElementById(`bc_btn-${tabName}`).classList.add('border-blue-600', 'text-blue-600', 'font-semibold');
+      document.getElementById(`bc_btn-${tabName}`).classList.remove('border-transparent', 'text-slate-500');
+      document.getElementById(`bc_tab-${tabName}-content`).classList.remove('hidden');
+      if (tabName === 'history') bc_renderHistory(); else if (tabName === 'reports') bc_fetchAndRenderReports();
+    }
+
+    function bc_showModal(title, msg, type = 'info') {
+      const modal = document.getElementById('bc_customModal'); const card = document.getElementById('bc_modalCard');
+      document.getElementById('bc_modalTitle').innerText = title; document.getElementById('bc_modalMessage').innerText = msg;
+      ['Success', 'Error', 'Info'].forEach(t => document.getElementById(`bc_modalIcon${t}`).classList.add('hidden'));
+      if(type==='success') document.getElementById('bc_modalIconSuccess').classList.remove('hidden');
+      else if(type==='error') document.getElementById('bc_modalIconError').classList.remove('hidden');
+      else document.getElementById('bc_modalIconInfo').classList.remove('hidden');
+      modal.classList.remove('hidden'); setTimeout(() => { card.classList.remove('scale-95', 'opacity-0'); card.classList.add('scale-100', 'opacity-100'); }, 50);
+    }
+
+    function bc_closeModal() {
+      const modal = document.getElementById('bc_customModal'); const card = document.getElementById('bc_modalCard');
+      card.classList.remove('scale-100', 'opacity-100'); card.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+
+    function bc_showConfirmModal(title, msg, onConfirm, isDangerous = true) {
+      const modal = document.getElementById('bc_customConfirmModal'); const card = document.getElementById('bc_confirmModalCard');
+      const proceedBtn = document.getElementById('bc_confirmProceedBtn');
+      document.getElementById('bc_confirmModalTitle').innerText = title; document.getElementById('bc_confirmModalMessage').innerText = msg;
+      proceedBtn.className = isDangerous ? "py-2.5 bg-yellow-600 hover:bg-yellow-700 text-white font-semibold rounded-xl text-sm transition-all shadow-md" : "py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm transition-all shadow-md";
+      bc_activeConfirmCallback = onConfirm; modal.classList.remove('hidden');
+      setTimeout(() => { card.classList.remove('scale-95', 'opacity-0'); card.classList.add('scale-100', 'opacity-100'); }, 50);
+    }
+
+    function bc_closeConfirmModal() {
+      const modal = document.getElementById('bc_customConfirmModal'); const card = document.getElementById('bc_confirmModalCard');
+      card.classList.remove('scale-100', 'opacity-100'); card.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => { modal.classList.add('hidden'); bc_activeConfirmCallback = null; }, 200);
+    }
+
+    document.getElementById('bc_confirmProceedBtn').addEventListener('click', () => { if (typeof bc_activeConfirmCallback === 'function') bc_activeConfirmCallback(); bc_closeConfirmModal(); });
+
+    function bc_updateStatusBadge() {
+      const badge = document.getElementById('bc_connectionBadge');
+      if (bc_db.apiUrl) {
+        badge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-blue-400"></span><span class="hidden md:inline font-medium">พร้อมซิงค์คลาวด์</span>`;
+        badge.className = "flex items-center space-x-1 px-3 py-1 bg-blue-900 bg-opacity-40 rounded-full text-xs text-blue-100";
+      } else {
+        badge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span><span class="hidden md:inline font-medium">ออฟไลน์</span>`;
+        badge.className = "flex items-center space-x-1 px-3 py-1 bg-yellow-900 bg-opacity-40 rounded-full text-xs text-yellow-100";
+      }
+    }
+
+    function bc_saveSettings() {
+      const urlInput = document.getElementById('bc_apiEndpointUrl').value.trim();
+      bc_db.apiUrl = urlInput; localStorage.setItem('bloodculture_api_url', urlInput);
+      bc_updateStatusBadge(); bc_showModal("สำเร็จ", "บันทึกการตั้งค่าลิงก์ Google Apps Script สำเร็จแล้ว", "success");
+    }
+
+    function bc_testApiConnection() {
+      const url = document.getElementById('bc_apiEndpointUrl').value.trim() || bc_db.apiUrl;
+      if (!url) return bc_showModal("ข้อผิดพลาด", "ระบุ URL ของ Web App ก่อนทดสอบ", "error");
+      bc_showModal("รอสักครู่", "กำลังทดสอบเชื่อมต่อ API...", "info");
+      fetch(url, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "ping" }) })
+      .then(() => bc_showModal("เชื่อมต่อสำเร็จ", "ระบบสามารถติดต่อ Google Sheet ได้", "success"))
+      .catch((err) => bc_showModal("ล้มเหลว", "เกิดข้อผิดพลาด: " + err, "error"));
+    }
+
+    function bc_submitAssessment() {
+      const dateVal = document.getElementById('bc_evalDate').value; const remarksVal = document.getElementById('bc_evalRemarks').value.trim();
+      if (!dateVal) return bc_showModal("ข้อมูลไม่ครบ", "กรุณาระบุวันที่ประเมิน", "error");
+      const newRecord = { id: 'BLOODCULTURE_' + Date.now() + '_' + Math.floor(Math.random()*1000), date: dateVal, department: document.getElementById('bc_department').value.trim(), patientName: document.getElementById('bc_patientName').value.trim(), practitioner: document.getElementById('bc_practitioner').value.trim(), evaluator: document.getElementById('bc_evaluator').value.trim(), evalTime: document.getElementById('bc_evalTime').value, items: { ...bc_currentRecord.items }, complianceRate: Number(bc_currentRecord.complianceRate || 0).toFixed(2), remarks: remarksVal, timestamp: new Date().toISOString(), synced: false };
+      bc_db.records.unshift(newRecord); localStorage.setItem('bloodculture_records', JSON.stringify(bc_db.records));
+      bc_updateUnsyncedBadge();
+      if (bc_db.apiUrl) bc_syncSingleRecord(newRecord.id, true);
+      else { bc_showModal("บันทึกออฟไลน์", "บันทึกในเครื่องเรียบร้อย (ส่งขึ้น Sheet เมื่อพร้อม)", "success"); bc_resetCurrentForm(); }
+    }
+
+    function bc_resetCurrentForm() {
+      document.getElementById('bc_evalRemarks').value = '';
+      ['bc_department','bc_patientName','bc_practitioner','bc_evaluator','bc_evalTime'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+      bc_currentRecord.items = {...bc_defaultItems}; bc_currentRecord.complianceRate = 0;
+      document.querySelectorAll('#app-bc .card-bundle-item').forEach(card => {
+        card.querySelector('.btn-check-yes').className = "btn-check-yes flex-1 md:w-24 py-2 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 transition-all text-xs font-semibold flex items-center justify-center space-x-1";
+        card.querySelector('.btn-check-yes .icon-dot').className = "icon-dot w-2 h-2 rounded-full bg-slate-300";
+        card.querySelector('.btn-check-no').className = "btn-check-no flex-1 md:w-28 py-2 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 transition-all text-xs font-semibold flex items-center justify-center space-x-1";
+        card.querySelector('.btn-check-no .icon-dot').className = "icon-dot w-2 h-2 rounded-full bg-slate-300";
+      });
+      bc_calculateLiveScore();
+    }
+
+    function bc_syncSingleRecord(recordId, isFromActiveForm = false) {
+      const idx = bc_db.records.findIndex(r => r.id === recordId); if (idx === -1 || !bc_db.apiUrl) return;
+      const record = bc_db.records[idx];
+      const payload = { date: record.date, department: record.department || "", patientName: record.patientName || "", practitioner: record.practitioner || "", evaluator: record.evaluator || "", evalTime: record.evalTime || "", complianceRate: record.complianceRate, remarks: record.remarks || "" };
+      for(let i=1; i<=bc_TOTAL_ITEMS; i++) payload['item'+i] = record.items[i] || "";
+      fetch(bc_db.apiUrl, { method: 'POST', mode: 'cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
+      .then(res => res.json()).then(result => {
+        if (result.status === "success") { bc_db.records[idx].synced = true; localStorage.setItem('bloodculture_records', JSON.stringify(bc_db.records)); bc_updateUnsyncedBadge(); bc_renderHistory(); if (isFromActiveForm) { bc_showModal("สำเร็จ", "ส่งข้อมูลขึ้น Google Sheet เรียบร้อย", "success"); bc_resetCurrentForm(); } }
+      }).catch(err => { if(isFromActiveForm) { bc_showModal("ออฟไลน์ชั่วคราว", "บันทึกในเครื่องแล้ว แต่ยังส่งขึ้น Sheet ไม่ได้ กรุณากดซิงค์ภายหลัง", "info"); bc_resetCurrentForm(); } });
+    }
+
+    function bc_syncAllRecords() {
+      const unsynced = bc_db.records.filter(r => !r.synced);
+      if (unsynced.length === 0) return bc_showModal("ข้อมูลล่าสุดแล้ว", "ทุกรายการซิงค์ขึ้นระบบเรียบร้อย", "success");
+      bc_showModal("กำลังดำเนินการ", `ส่งข้อมูลขึ้นคลาวด์ ${unsynced.length} รายการ...`, "info");
+      let chain = Promise.resolve();
+      unsynced.forEach(record => {
+        chain = chain.then(() => {
+          const payload = { date: record.date, department: record.department || "", patientName: record.patientName || "", practitioner: record.practitioner || "", evaluator: record.evaluator || "", evalTime: record.evalTime || "", complianceRate: Number(record.complianceRate || 0).toFixed(2), remarks: record.remarks || "" };
+          for(let i=1; i<=bc_TOTAL_ITEMS; i++) payload['item'+i] = record.items[i] || "";
+          return fetch(bc_db.apiUrl, { method: 'POST', mode: 'cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) }).then(res => res.json()).then(res => { if(res.status==="success") record.synced = true; }).catch(()=>{});
+        });
+      });
+      chain.then(() => { localStorage.setItem('bloodculture_records', JSON.stringify(bc_db.records)); bc_updateUnsyncedBadge(); bc_renderHistory(); bc_showModal("เสร็จสิ้น", "กระบวนการซิงค์ข้อมูลเสร็จสิ้น", "success"); });
+    }
+
+    function bc_confirmClearHistory() {
+      bc_showConfirmModal("ล้างประวัติ?", "ลบประวัติเฉพาะในเครื่องนี้? (ไม่ลบบน Sheet)", () => {
+        bc_db.records = []; localStorage.setItem('bloodculture_records', '[]');
+        bc_updateUnsyncedBadge(); bc_renderHistory(); bc_showModal("รีเซ็ตแล้ว", "ล้างข้อมูลในเครื่องเรียบร้อย", "success");
+      });
+    }
+
+    function bc_deleteRecord(recordId) {
+      bc_showConfirmModal("ลบรายการนี้?", "รายการนี้จะหายไปจากเครื่อง (ไม่ลบบน Sheet)", () => {
+        bc_db.records = bc_db.records.filter(r => r.id !== recordId);
+        localStorage.setItem('bloodculture_records', JSON.stringify(bc_db.records));
+        bc_updateUnsyncedBadge(); bc_renderHistory();
+      });
+    }
+
+    function bc_updateUnsyncedBadge() {
+      const unsynced = bc_db.records.filter(r => !r.synced).length; const synced = bc_db.records.filter(r => r.synced).length;
+      const badge = document.getElementById('bc_unsyncedCountBadge');
+      if (unsynced > 0) { badge.innerText = unsynced; badge.classList.remove('hidden'); } else badge.classList.add('hidden');
+      document.getElementById('bc_unsyncedCountTitle').innerText = `${unsynced} รายการ`; document.getElementById('bc_syncedCountTitle').innerText = `${synced} รายการ`;
+    }
+
+    function bc_renderHistory() {
+      const body = document.getElementById('bc_historyListBody');
+      if (bc_db.records.length === 0) { body.innerHTML = ''; document.getElementById('bc_historyEmptyState').classList.remove('hidden'); return; }
+      document.getElementById('bc_historyEmptyState').classList.add('hidden');
+      body.innerHTML = bc_db.records.map(r => {
+        const syncBadge = r.synced ? `<span class="px-2 py-1 rounded bg-blue-50 text-blue-700 text-xs font-bold border border-blue-100">ซิงค์แล้ว</span>` : `<span class="px-2 py-1 rounded bg-yellow-50 text-yellow-700 text-xs font-bold border border-yellow-100">รอซิงค์</span>`;
+        let color = r.complianceRate === 100 ? "text-blue-700 bg-blue-50 border-blue-200" : (r.complianceRate >= 80 ? "text-blue-700 bg-blue-50 border-blue-200" : "text-yellow-700 bg-yellow-50 border-yellow-200");
+        const parts = r.date.split('-'); const thDate = parts.length===3 ? `${parts[2]}/${parts[1]}/${parseInt(parts[0])+543}` : r.date;
+        let totalYes = 0;
+        const boxes = Object.keys(r.items).map(k => {
+            if (r.items[k] === 'ปฏิบัติ') totalYes++;
+            let bg = r.items[k] === 'ปฏิบัติ' ? 'bg-blue-500' : (r.items[k] === 'ไม่ปฏิบัติ' ? 'bg-yellow-500' : 'bg-slate-200');
+            return `<div class="w-3.5 h-3.5 rounded-sm ${bg} flex items-center justify-center text-[8px] text-white font-bold m-[1px]" title="ข้อ ${k}: ${r.items[k]||'ว่าง'}">${k}</div>`;
+        }).join('');
+        return `
+          <tr class="hover:bg-slate-50 border-b border-slate-100">
+            <td class="py-3 px-4 font-semibold">${thDate}<div class="text-[10px] text-slate-400 font-normal">${r.department || ""}</div><div class="text-[10px] text-slate-500 font-normal">${r.patientName || ""}</div></td>
+            <td class="py-3 px-4"><div class="flex flex-wrap max-w-[140px] mx-auto justify-center">${boxes}</div></td>
+            <td class="py-3 px-4 text-center"><span class="px-2 py-1 rounded-full text-xs font-bold border ${color}">${Number(r.complianceRate).toFixed(2)}% (${totalYes}/${bc_TOTAL_ITEMS})</span></td>
+            <td class="py-3 px-4 text-center">${syncBadge}</td>
+            <td class="py-3 px-4 text-center">
+              <div class="flex justify-center space-x-1">
+                ${!r.synced ? `<button onclick="bc_syncSingleRecord('${r.id}')" class="p-1 text-blue-600 hover:bg-blue-100 rounded"><i data-lucide="upload-cloud" class="w-4 h-4"></i></button>` : ''}
+                <button onclick="bc_deleteRecord('${r.id}')" class="p-1 text-yellow-500 hover:bg-yellow-100 rounded"><i data-lucide="trash" class="w-4 h-4"></i></button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function bc_setFilterType(type) {
+      bc_currentFilterType = type;
+      document.querySelectorAll('#app-bc .filter-tab-btn').forEach(btn => btn.className = "filter-tab-btn px-4 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:bg-slate-50");
+      document.getElementById(`bc_filter-btn-${type}`).className = "filter-tab-btn px-4 py-2 rounded-lg text-xs font-bold transition-all bg-blue-600 text-white shadow-sm";
+      document.querySelectorAll('#app-bc .filter-input-sub').forEach(el => el.classList.add('hidden'));
+      if(type !== 'all') {
+          document.getElementById('bc_filterInputsContainer').classList.remove('hidden');
+          document.getElementById(`bc_filter-input-${type}`).classList.remove('hidden');
+          if(type==='year') {
+              const yrs = [...new Set(bc_db.records.map(r=>r.date.split('-')[0]))].filter(Boolean).sort().reverse();
+              if(!yrs.length) yrs.push(new Date().getFullYear().toString());
+              document.getElementById('bc_filterYearVal').innerHTML = yrs.map(y=>`<option value="${y}">พ.ศ. ${parseInt(y)+543}</option>`).join('');
+          }
+      } else { document.getElementById('bc_filterInputsContainer').classList.add('hidden'); }
+      bc_renderReports();
+    }
+
+    function bc_getFilteredRecords() {
+      let recs = [...bc_db.records];
+      if (bc_currentFilterType === 'month') {
+        const m = document.getElementById('bc_filterMonthVal').value; if(m) recs = recs.filter(r => r.date.startsWith(m));
+      } else if (bc_currentFilterType === 'year') {
+        const y = document.getElementById('bc_filterYearVal').value; if(y) recs = recs.filter(r => r.date.startsWith(y));
+      } else if (bc_currentFilterType === 'range') {
+        const s = document.getElementById('bc_filterStartVal').value, e = document.getElementById('bc_filterEndVal').value;
+        if(s) recs = recs.filter(r => r.date >= s); if(e) recs = recs.filter(r => r.date <= e);
+      }
+      return recs;
+    }
+
+    function bc_renderReports() {
+      const records = bc_getFilteredRecords(); const total = records.length;
+      document.getElementById('bc_repTotalEvaluations').innerText = total;
+      if (total === 0) {
+        document.getElementById('bc_repFullComplianceCount').innerText = "0"; document.getElementById('bc_repFullCompliancePct').innerText = "0% (0/0) ของทั้งหมด"; document.getElementById('bc_repCriticalImprovement').innerText = "ไม่มีข้อมูล";
+        document.getElementById('bc_itemBreakdownContainer').innerHTML = `<div class="text-center py-6 text-slate-400 text-sm w-full lg:col-span-2">ไม่พบข้อมูลสถิติตามเงื่อนไขที่เลือก</div>`;
+        document.getElementById('bc_chart1EmptyState').classList.remove('hidden'); if(bc_comparisonChartInstance) bc_comparisonChartInstance.destroy();
+        document.getElementById('bc_chart2EmptyState').classList.remove('hidden'); const listContainer = document.getElementById('bc_nonComplianceListContainer'); if(listContainer) listContainer.innerHTML = '';
+        return;
+      }
+      document.getElementById('bc_chart1EmptyState').classList.add('hidden');
+      let fullC = 0; records.forEach(r => { if(r.complianceRate === 100) fullC++; });
+      document.getElementById('bc_repFullComplianceCount').innerText = fullC; document.getElementById('bc_repFullCompliancePct').innerText = `${((fullC/total)*100).toFixed(2)}% (${fullC}/${total}) ของทั้งหมด`;
+      const stats = {}; for(let i=1; i<=bc_TOTAL_ITEMS; i++) stats[i] = { yes:0, no:0, text: bc_checkListData[i] };
+      records.forEach(r => { for(let i=1; i<=bc_TOTAL_ITEMS; i++) { if(r.items[i]==='ปฏิบัติ') stats[i].yes++; else if(r.items[i]==='ไม่ปฏิบัติ') stats[i].no++; } });
+      let lowestRate = 101, lowestItems = []; let html = "", lbls=[], dYes=[], dNo=[], fYes=[], fNo=[]; let ncDataArr = []; const tempDiv = document.createElement("div");
+      for(let i=1; i<=bc_TOTAL_ITEMS; i++) {
+        const totalEval = stats[i].yes + stats[i].no; const pYes = totalEval > 0 ? Number(((stats[i].yes / totalEval) * 100).toFixed(2)) : 0; const pNo = totalEval > 0 ? Number((100 - pYes).toFixed(2)) : 0;
+        lbls.push(`ข้อ ${i}`); dYes.push(pYes); dNo.push(pNo); fYes.push(`${stats[i].yes}/${totalEval}`); fNo.push(`${stats[i].no}/${totalEval}`);
+        tempDiv.innerHTML = stats[i].text; const cleanText = tempDiv.textContent || tempDiv.innerText || "";
+        if(totalEval > 0) { if(pYes < lowestRate) { lowestRate = pYes; lowestItems = [{ item: i, text: cleanText }]; } else if(pYes === lowestRate) { lowestItems.push({ item: i, text: cleanText }); } }
+        if (stats[i].no > 0) { ncDataArr.push({ item: i, label: [`ข้อ ${i}`, cleanText.substring(0, 35) + (cleanText.length > 35 ? '...' : '')], fullText: cleanText, noCount: stats[i].no, totalEval: totalEval, pct: pNo }); }
+        const noTextLabel = stats[i].no > 0 ? `<span class="font-bold text-yellow-500">ไม่ปฏิบัติ: ${pNo.toFixed(2)}% (${stats[i].no}/${totalEval})</span>` : ``;
+        html += `
+          <div class="break-inside-avoid mb-4 flex flex-col justify-between bg-slate-50/80 p-4 rounded-xl border border-slate-100 hover:border-blue-200 transition-all shadow-sm">
+            <div class="font-semibold text-slate-800 text-[13px] leading-relaxed mb-3"><span class="text-blue-600 font-bold mr-1">ข้อ ${i}.</span>${stats[i].text}</div>
+            <div class="w-full">
+              <div class="flex justify-between items-end text-xs mb-1.5 px-0.5"><span class="font-bold text-blue-600">ปฏิบัติ: ${pYes.toFixed(2)}% (${stats[i].yes}/${totalEval})</span>${noTextLabel}</div>
+              <div class="w-full bg-slate-200 rounded-full h-2.5 flex overflow-hidden shadow-inner">
+                <div class="bg-blue-500 h-full transition-all duration-1000" style="width: ${pYes}%"></div>
+                <div class="bg-yellow-400 h-full transition-all duration-1000" style="width: ${pNo}%"></div>
+              </div>
+            </div>
+          </div>`;
+      }
+      const criticalEl = document.getElementById('bc_repCriticalImprovement');
+      if (lowestItems.length > 0 && lowestRate < 100) { criticalEl.innerHTML = lowestItems.map(item => `ข้อ ${item.item}. ${item.text} <span class="whitespace-nowrap">(${Number(lowestRate).toFixed(2)}%)</span>`).join('<br>'); } else if (lowestItems.length > 0) { criticalEl.innerText = "สมบูรณ์ทุกข้อ"; } else { criticalEl.innerText = "ไม่มีข้อมูล"; }
+      document.getElementById('bc_itemBreakdownContainer').innerHTML = html;
+      const ctx1 = document.getElementById('bc_comparisonChartCanvas').getContext('2d');
+      if(bc_comparisonChartInstance) bc_comparisonChartInstance.destroy();
+      bc_comparisonChartInstance = new Chart(ctx1, {
+        type: 'bar', plugins: [ChartDataLabels],
+        data: { labels: lbls, datasets: [ { label: 'ปฏิบัติ (%)', data: dYes, frac: fYes, backgroundColor: '#2563EB', borderRadius: 4 }, { label: 'ไม่ปฏิบัติ (%)', data: dNo, frac: fNo, backgroundColor: '#FACC15', borderRadius: 4 } ] },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { max: 100, ticks: { font:{family:'Prompt', size:10}, callback: v=>v+'%' } }, x: { ticks: { font:{family:'Prompt', size:10} } } }, plugins: { legend: { position: 'bottom', labels:{font:{family:'Prompt', size:12}} }, datalabels: { color: '#1e293b', font: {family:'Prompt', size:9, weight:'bold'}, formatter: v => v>0?Number(v).toFixed(2)+'%':'' }, tooltip: { callbacks: { label: function(context) { const dataset = context.dataset; const frac = dataset.frac[context.dataIndex]; return ` ${dataset.label}: ${Number(context.raw).toFixed(2)}% (${frac})`; } } } } }
+      });
+      const listContainer = document.getElementById('bc_nonComplianceListContainer'); const emptyState2 = document.getElementById('bc_chart2EmptyState');
+      if (listContainer && emptyState2) {
+        if (ncDataArr.length === 0) { listContainer.innerHTML = ''; emptyState2.classList.remove('hidden'); } else {
+            emptyState2.classList.add('hidden'); ncDataArr.sort((a, b) => b.pct - a.pct || b.noCount - a.noCount || a.item - b.item);
+            let listHtml = '';
+            ncDataArr.forEach((d, index) => {
+                const rank = index + 1; let rankBadge = "";
+                if (rank === 1) rankBadge = "bg-yellow-500 text-white shadow-md border-yellow-600"; else if (rank === 2) rankBadge = "bg-slate-400 text-white shadow-sm border-slate-500"; else if (rank === 3) rankBadge = "bg-yellow-700 text-white shadow-sm border-yellow-800"; else rankBadge = "bg-blue-500 text-white shadow-sm border-blue-600";
+                listHtml += `
+                  <div class="break-inside-avoid mb-3 bg-white p-2.5 rounded-lg border border-sky-100 shadow-sm hover:shadow-md transition-all">
+                    <div class="flex justify-between items-start gap-2">
+                      <div class="flex items-start gap-2 w-full">
+                         <div class="w-5 h-5 rounded-full ${rankBadge} border flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">${rank}</div>
+                         <div class="text-[11px] font-medium text-slate-700 leading-snug"><span class="font-bold text-yellow-600">ข้อ ${d.item}.</span> ${d.fullText}</div>
+                      </div>
+                      <div class="shrink-0 text-right flex flex-col items-end">
+                         <div class="text-yellow-600 font-bold text-[12px] leading-none mb-1">${d.noCount} <span class="text-[8px] font-medium text-yellow-400">ครั้ง</span></div>
+                         <div class="text-[9px] font-semibold text-slate-500 bg-slate-50 px-1 py-0.5 rounded leading-none">${Number(d.pct).toFixed(2)}% <span class="font-normal">(${d.noCount}/${d.totalEval})</span></div>
+                      </div>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-1 mt-2 ml-[28px]" style="width: calc(100% - 28px);">
+                       <div class="bg-yellow-500 h-full rounded-full transition-all duration-1000" style="width: ${d.pct}%"></div>
+                    </div>
+                  </div>
+                `;
+            });
+            listContainer.innerHTML = listHtml;
+        }
+      }
+    }
 
     // ==========================================
     // CAUTI CARE BUNDLE LOGIC (Prefixed with cauti_)
@@ -1936,13 +2320,20 @@
     // ==========================================
     // WINDOW ONLOAD (INITIALIZE BOTH APPS)
     // ==========================================
+    // WINDOW ONLOAD (INITIALIZE ALL 3 APPS)
+    // ==========================================
     window.onload = function() {
+      const today = new Date().toISOString().split('T')[0];
+      const now = new Date(); 
+      const timeString = now.toTimeString().slice(0,5);
+
       // INIT APP 1: BLOOD CULTURE
       bc_generateChecklistForm();
-      const today = new Date().toISOString().split('T')[0];
       document.getElementById('bc_evalDate').value = today; bc_currentRecord.date = today;
-      const now = new Date(); document.getElementById('bc_evalTime').value = now.toTimeString().slice(0,5); bc_currentRecord.evalTime = document.getElementById('bc_evalTime').value;
-      document.getElementById('bc_filterMonthVal').value = today.slice(0, 7); document.getElementById('bc_filterStartVal').value = today; document.getElementById('bc_filterEndVal').value = today;
+      document.getElementById('bc_evalTime').value = timeString; bc_currentRecord.evalTime = timeString;
+      document.getElementById('bc_filterMonthVal').value = today.slice(0, 7); 
+      document.getElementById('bc_filterStartVal').value = today; 
+      document.getElementById('bc_filterEndVal').value = today;
       if (bc_db.apiUrl) document.getElementById('bc_apiEndpointUrl').value = bc_db.apiUrl;
       if(bc_db.apiUrl) bc_fetchDataFromSheet().then(() => { bc_renderHistory(); bc_renderReports(); });
       bc_updateUnsyncedBadge(); bc_updateStatusBadge(); bc_renderHistory(); bc_renderReports();
@@ -1950,10 +2341,22 @@
       // INIT APP 2: MDR
       mdr_generateChecklistForm();
       document.getElementById('mdr_evalDate').value = today; mdr_currentRecord.date = today;
-      document.getElementById('mdr_filterMonthVal').value = today.slice(0, 7); document.getElementById('mdr_filterStartVal').value = today; document.getElementById('mdr_filterEndVal').value = today;
+      document.getElementById('mdr_filterMonthVal').value = today.slice(0, 7); 
+      document.getElementById('mdr_filterStartVal').value = today; 
+      document.getElementById('mdr_filterEndVal').value = today;
       if (mdr_db.apiUrl) document.getElementById('mdr_apiEndpointUrl').value = mdr_db.apiUrl;
       if(mdr_db.apiUrl) mdr_fetchDataFromSheet().then(() => { mdr_renderHistory(); mdr_renderReports(); });
       mdr_updateUnsyncedBadge(); mdr_updateStatusBadge(); mdr_renderHistory(); mdr_renderReports();
+
+      // INIT APP 3: CAUTI
+      cauti_generateChecklistForm();
+      document.getElementById('cauti_evalDate').value = today; cauti_currentRecord.date = today;
+      document.getElementById('cauti_filterMonthVal').value = today.slice(0, 7); 
+      document.getElementById('cauti_filterStartVal').value = today; 
+      document.getElementById('cauti_filterEndVal').value = today;
+      if (cauti_db.apiUrl) document.getElementById('cauti_apiEndpointUrl').value = cauti_db.apiUrl;
+      if(cauti_db.apiUrl) cauti_fetchDataFromSheet().then(() => { cauti_renderHistory(); cauti_renderReports(); });
+      cauti_updateUnsyncedBadge(); cauti_updateStatusBadge(); cauti_renderHistory(); cauti_renderReports();
     };
 
   </script>
