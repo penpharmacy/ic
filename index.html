@@ -1365,7 +1365,11 @@
           <tr class="hover:bg-slate-50 border-b border-slate-100">
             <td class="py-3 px-4 font-semibold">${thDate}<div class="text-[10px] text-slate-400 font-normal">${r.department || ""}</div><div class="text-[10px] text-slate-500 font-normal">${r.patientName || ""}</div></td>
             <td class="py-3 px-4"><div class="flex flex-wrap max-w-[140px] mx-auto justify-center">${boxes}</div></td>
-            <td class="py-3 px-4 text-center"><span class="px-2 py-1 rounded-full text-xs font-bold border ${color}">${Number(r.complianceRate).toFixed(2)}% (${totalYes}/${bc_TOTAL_ITEMS})</span></td>
+           <td class="py-3 px-4 text-center w-36 whitespace-nowrap">
+  <span class="inline-block px-3 py-1 rounded-full text-xs font-bold border ${color} whitespace-nowrap">
+    ${Number(r.complianceRate).toFixed(2)}% (${totalYes}/${TOTAL_ITEMS})
+  </span>
+</td>
             <td class="py-3 px-4 text-center">${syncBadge}</td>
             <td class="py-3 px-4 text-center">
               <div class="flex justify-center space-x-1">
