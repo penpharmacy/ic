@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
@@ -65,7 +65,16 @@
     <header class="bg-gradient-to-r from-blue-600 to-sky-600 text-white shadow-lg relative z-40">
       <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
         <div class="flex items-center space-x-3">
-          <img src="image_4eb93b.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3209/3209255.png'" alt="Blood Culture Logo" class="w-11 h-11 object-cover rounded-full bg-white border-2 border-blue-200 shadow-sm p-0.5">
+         <div class="w-11 h-11 rounded-full bg-white border-2 border-blue-200 shadow-sm flex items-center justify-center flex-shrink-0">
+  <svg viewBox="0 0 32 32" class="w-7 h-7" xmlns="http://www.w3.org/2000/svg">
+    <!-- ฝาจุก -->
+    <rect x="11" y="2" width="10" height="5" rx="1.5" fill="#dc2626"/>
+    <!-- ตัวหลอด -->
+    <path d="M12 7 H20 V24 A4 4 0 0 1 12 24 Z" fill="#e0f2fe" stroke="#475569" stroke-width="1.2"/>
+    <!-- เลือดในหลอด -->
+    <path d="M12.6 16 H19.4 V24 A3.4 3.4 0 0 1 12.6 24 Z" fill="#dc2626"/>
+  </svg>
+</div>
           <div>
             <h1 class="text-lg md:text-xl font-bold tracking-wide">Blood Culture Collection Checklist</h1>
             <p class="text-xs text-blue-100 font-light">โรงพยาบาลพุนพิน จังหวัดสุราษฎร์ธานี</p>
@@ -714,25 +723,60 @@
   <!-- ========================================== -->
   <div id="app-cauti" class="flex flex-col flex-grow hidden">
     
-    <!-- TOP HEADER -->
-    <header class="bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg sticky top-0 z-40">
-      <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-        <div class="flex items-center space-x-3">
-          <svg class="w-8 h-8 text-pink-100" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-          </svg>
-          <div>
-            <h1 class="text-lg md:text-xl font-bold tracking-wide">CAUTI Care Bundle</h1>
-            <p class="text-xs text-pink-100 font-light">รพ.พุนพิน สุราษฎร์ธานี</p>
-          </div>
-        </div>
-        <div id="cauti_connectionBadge" class="flex items-center space-x-1 px-3 py-1 bg-pink-900 bg-opacity-40 rounded-full text-xs text-pink-100 border border-pink-400/20">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="hidden md:inline font-medium">เชื่อมต่อระบบ</span>
-        </div>
-      </div>
-    </header>
+ <!-- TOP HEADER -->
+<header class="bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+    <div class="flex items-center space-x-3">
 
+      <!-- โลโก้ถุงรองรับปัสสาวะ + สายสวน -->
+      <div class="w-12 h-12 rounded-full bg-white border-2 border-pink-200 shadow-sm flex items-center justify-center flex-shrink-0 overflow-hidden">
+        <svg viewBox="0 0 100 100" class="w-10 h-10" xmlns="http://www.w3.org/2000/svg">
+          <!-- สายสีฟ้า (ถุง → ข้อต่อ) -->
+          <path d="M30 24 C30 2, 80 -2, 84 42" stroke="#2f96e8" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <!-- สายสวนสีส้ม -->
+          <path d="M84 50 C86 70, 80 94, 58 94 C46 94, 55 80, 56 74" stroke="#fdc77e" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <!-- แขนช่องเติมน้ำ (แดง) -->
+          <path d="M84 54 L91 52 L91 46" stroke="#fdc77e" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <rect x="89" y="43" width="4" height="6" rx="1" fill="#d9480f"/>
+          <!-- ข้อต่อสีเหลือง -->
+          <rect x="81.5" y="41" width="5" height="11" rx="1.5" fill="#f5d90a"/>
+          <rect x="28" y="22" width="4" height="7" rx="1" fill="#f5c400"/>
+          <!-- บอลลูน -->
+          <circle cx="57" cy="68" r="6.5" fill="#fbc02d"/>
+          <line x1="60" y1="62" x2="62" y2="58" stroke="#d97706" stroke-width="1"/>
+          <!-- ตัวถุง -->
+          <path d="M10 38 Q10 31 17 31 H43 Q50 31 50 38 V76 Q50 84 42 84 H18 Q10 84 10 76 Z" fill="#4da3e8"/>
+          <path d="M14 42 Q14 36 20 36 H40 Q46 36 46 42 V74 Q46 80 40 80 H20 Q14 80 14 74 Z" fill="#2a8de0"/>
+          <!-- ปัสสาวะสีเหลือง -->
+          <path d="M14 62 Q30 58 46 60 V74 Q46 80 40 80 H20 Q14 80 14 74 Z" fill="#e9e55a"/>
+          <!-- ขีดบอกปริมาณ -->
+          <g stroke="#ffffff" stroke-width="0.9" stroke-linecap="round">
+            <line x1="30" y1="45" x2="45" y2="45"/>
+            <line x1="34" y1="49" x2="45" y2="49"/>
+            <line x1="30" y1="53" x2="45" y2="53"/>
+            <line x1="34" y1="57" x2="45" y2="57"/>
+            <line x1="30" y1="65" x2="45" y2="65"/>
+            <line x1="34" y1="69" x2="45" y2="69"/>
+            <line x1="30" y1="73" x2="45" y2="73"/>
+          </g>
+          <!-- ช่องระบายปัสสาวะด้านล่าง -->
+          <rect x="25" y="84" width="10" height="3" rx="1" fill="#1d7fd6"/>
+          <path d="M28.5 87 H31.5 V94 H28.5 Z" fill="#b6e3f7"/>
+        </svg>
+      </div>
+
+      <div>
+        <h1 class="text-lg md:text-xl font-bold tracking-wide">CAUTI Care Bundle</h1>
+        <p class="text-xs text-pink-100 font-light">รพ.พุนพิน สุราษฎร์ธานี</p>
+      </div>
+    </div>
+
+    <div id="cauti_connectionBadge" class="flex items-center space-x-1 px-3 py-1 bg-pink-900 bg-opacity-40 rounded-full text-xs text-pink-100 border border-pink-400/20">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="hidden md:inline font-medium">เชื่อมต่อระบบ</span>
+    </div>
+  </div>
+</header>
     <!-- NAVIGATION TABS -->
     <nav class="bg-white border-b border-slate-200 sticky top-[48px] sm:top-[60px] z-30 shadow-sm">
       <div class="max-w-6xl mx-auto px-4 flex justify-around">
@@ -1365,7 +1409,12 @@
           <tr class="hover:bg-slate-50 border-b border-slate-100">
             <td class="py-3 px-4 font-semibold">${thDate}<div class="text-[10px] text-slate-400 font-normal">${r.department || ""}</div><div class="text-[10px] text-slate-500 font-normal">${r.patientName || ""}</div></td>
             <td class="py-3 px-4"><div class="flex flex-wrap max-w-[140px] mx-auto justify-center">${boxes}</div></td>
-            <td class="py-3 px-4 text-center"><span class="px-2 py-1 rounded-full text-xs font-bold border ${color}">${Number(r.complianceRate).toFixed(2)}% (${totalYes}/${bc_TOTAL_ITEMS})</span></td>
+            <td class="py-3 px-4 text-center">
+              <div class="inline-flex flex-col items-center justify-center px-2 py-1.5 rounded-lg border ${color} min-w-[4.5rem]">
+                <span class="text-xs font-bold leading-none mb-1">${Number(r.complianceRate).toFixed(2)}%</span>
+                <span class="text-[10px] font-semibold leading-none opacity-80">(${totalYes}/${bc_TOTAL_ITEMS})</span>
+              </div>
+            </td>
             <td class="py-3 px-4 text-center">${syncBadge}</td>
             <td class="py-3 px-4 text-center">
               <div class="flex justify-center space-x-1">
@@ -1476,6 +1525,414 @@
                     </div>
                     <div class="w-full bg-slate-100 rounded-full h-1 mt-2 ml-[28px]" style="width: calc(100% - 28px);">
                        <div class="bg-yellow-500 h-full rounded-full transition-all duration-1000" style="width: ${d.pct}%"></div>
+                    </div>
+                  </div>
+                `;
+            });
+            listContainer.innerHTML = listHtml;
+        }
+      }
+    }
+
+    // ==========================================
+    // MDR CHECKLIST LOGIC (Prefixed with mdr_)
+    // ==========================================
+    const mdr_TOTAL_ITEMS = 16;
+    const mdr_checkListData = {
+      1: "แจ้ง ICN ทันทีเมื่อมีผู้ป่วยติดเชื้อดื้อยามาใช้บริการ โทร 102",
+      2: "แจ้งบุคลากรทุกคนในหอผู้ป่วยทราบ",
+      3: "แยกผู้ป่วยในห้องแยกหรือโซนติดเชื้อชนิดเดียวกัน",
+      4: "ติดป้าย Contact precautions ที่เตียงหรือหน้าห้องผู้ป่วย",
+      5: "ไม่วางสิ่งของและอุปกรณ์ของใช้บนเตียงผู้ป่วย",
+      6: "แยกอุปกรณ์ของใช้เช่น ปรอทวัดไข้ เครื่องวัดความดัน หูฟัง รวมทั้งอุปกรณ์ทำความสะอาดเฉพาะรายต่อราย",
+      7: "จัดเตรียม Alcohol gel hand rub ไว้ที่หน้าห้องผู้ป่วย/ปลายเตียงผู้ป่วย",
+      8: "ล้างมือทุกครั้งก่อนและหลังสัมผัสผู้ป่วย หลังสัมผัสอุปกรณ์และสิ่งแวดล้อมในห้องผู้ป่วยด้วยน้ำยา 4% chlorhexidine gluconate",
+      9: "สวมอุปกรณ์ป้องกันร่างกาย (ถุงมือ เสื้อคลุม mask) และถอดถุงมือ เสื้อคลุมก่อนออกจากห้องผู้ป่วย (สวม PPE รายต่อรายเท่านั้น)",
+      10: "แยกผ้าและขยะเป็นประเภทติดเชื้อ",
+      11: "ทำความสะอาดสิ่งแวดล้อมภายในห้องอย่างน้อยวันละ 1 ครั้ง ด้วยน้ำยา POSEQUAT 5G และเมื่อจำหน่ายผู้ป่วยอย่างน้อย 3 ครั้ง",
+      12: "เคลื่อนย้ายผู้ป่วยแจ้งหน่วยงานที่เกี่ยวข้องและพนักงานเปลทราบพร้อมทั้งแขวนป้าย MDR",
+      13: "พนักงานเปลสวมถุงมือ เสื้อกาวน์ mask ถูกต้องเหมาะสม มีผ้าคลุมเปลอีก 1 ชั้นมีน้ำยาทำความสะอาดเปล/ Alcohol gel",
+      14: "จำกัดบุคลากร/ผู้เฝ้าไข้ให้น้อยที่สุดเข้าไปดูแลผู้ป่วยห้องแยก",
+      15: "ให้คำแนะนำผู้ป่วยและญาติในการปฏิบัติตัว (แจกแผ่นพับ)",
+      16: `ทำการเพาะเชื้อเพื่อยุติ contact precautions พิจารณาการยกเลิก contact precautions
+          <ul class="mt-1 space-y-1 text-[10px] sm:text-xs font-normal text-slate-500 pl-1">
+            <li class="flex items-start leading-tight"><span class="font-bold text-purple-500 mr-1 min-w-[10px]">1.</span> <span>เมื่อตรวจไม่พบเชื้อ อาการและอาการแสดงของการติดเชื้อหายไป</span></li>
+            <li class="flex items-start leading-tight"><span class="font-bold text-purple-500 mr-1 min-w-[10px]">2.</span> <span>ไม่ต้องนัดผู้ป่วยเพื่อมาทำการเพาะเชื้อ หากภายใน 6 เดือนผู้ป่วยมา Admit ให้ทำการเพาะเชื้อ ตาม Clinical specimen ผล Negative 2 ครั้งห่างกัน 7 วัน</span></li>
+            <li class="flex items-start leading-tight"><span class="font-bold text-purple-500 mr-1 min-w-[10px]">3.</span> <span>กรณี VRE/ CRE ทำ RSC for VRE / CRE 3 ครั้งห่างกัน 1 wk. ให้ผล Negative ยกเลิกได้ หากยังพบเชื้อให้ติดตามอีก 6 เดือน <span class="text-purple-400">(ทั้งนี้อยู่ในดุลยพินิจของแพทย์)</span></span></li>
+          </ul>`
+    };
+
+    const mdr_defaultItems = {};
+    for(let i=1; i<=mdr_TOTAL_ITEMS; i++) mdr_defaultItems[i] = null;
+    const mdr_GLOBAL_DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbxgTzi3myvmk0MAhA-et7xDoAMf_kr5ATEr0xnq0vLT9m778Wx1xBakmELTwTlqtowtDA/exec";
+
+    let mdr_db = {
+      records: JSON.parse(localStorage.getItem('mdro_records')) || [],
+      apiUrl: localStorage.getItem('mdro_api_url') || mdr_GLOBAL_DEFAULT_API_URL
+    };
+
+    let mdr_comparisonChartInstance = null;
+    let mdr_currentFilterType = 'all';
+    let mdr_currentRecord = { id: '', date: '', items: {...mdr_defaultItems}, complianceRate: 0, remarks: '', synced: false, timestamp: null };
+    let mdr_activeConfirmCallback = null;
+
+    function mdr_generateChecklistForm() {
+      const container = document.getElementById('mdr_bundleForm');
+      let html = '';
+      for (let i = 1; i <= mdr_TOTAL_ITEMS; i++) {
+        html += `
+          <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 hover:border-purple-300 transition-all card-bundle-item" data-index="${i}">
+            <div class="flex flex-col md:flex-row md:items-start justify-between gap-3">
+              <div class="flex items-start space-x-3 w-full md:w-2/3">
+                <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-purple-100 text-purple-800 font-bold text-xs flex-shrink-0 mt-0.5">${i}</span>
+                <div class="font-medium text-slate-800 text-sm leading-relaxed w-full pt-1.5 md:pt-1">${mdr_checkListData[i]}</div>
+              </div>
+              <div class="flex items-center space-x-2 pl-10 md:pl-0 w-full md:w-auto justify-start md:justify-end mt-2 md:mt-0">
+                <button onclick="mdr_setItemValue(${i}, 'ปฏิบัติ')" class="btn-check-yes flex-1 md:w-24 py-2 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 transition-all text-xs font-semibold flex items-center justify-center space-x-1">
+                  <span class="icon-dot w-2 h-2 rounded-full bg-slate-300"></span><span>ปฏิบัติ</span>
+                </button>
+                <button onclick="mdr_setItemValue(${i}, 'ไม่ปฏิบัติ')" class="btn-check-no flex-1 md:w-28 py-2 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 transition-all text-xs font-semibold flex items-center justify-center space-x-1">
+                  <span class="icon-dot w-2 h-2 rounded-full bg-slate-300"></span><span>ไม่ปฏิบัติ</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      container.innerHTML = html;
+    }
+
+    function mdr_setItemValue(itemNum, value) {
+      mdr_currentRecord.items[itemNum] = value;
+      const card = document.querySelector(`#app-mdr .card-bundle-item[data-index="${itemNum}"]`);
+      const yesBtn = card.querySelector('.btn-check-yes');
+      const noBtn = card.querySelector('.btn-check-no');
+
+      if (value === 'ปฏิบัติ') {
+        yesBtn.className = "btn-check-yes flex-1 md:w-24 py-2 rounded-xl border-2 border-emerald-500 bg-emerald-50 font-bold text-emerald-700 transition-all text-xs flex items-center justify-center space-x-1 shadow-sm";
+        yesBtn.querySelector('.icon-dot').className = "icon-dot w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
+        noBtn.className = "btn-check-no flex-1 md:w-28 py-2 rounded-xl border border-slate-200 font-semibold text-slate-500 hover:bg-slate-50 transition-all text-xs flex items-center justify-center space-x-1";
+        noBtn.querySelector('.icon-dot').className = "icon-dot w-2 h-2 rounded-full bg-slate-300";
+      } else if (value === 'ไม่ปฏิบัติ') {
+        yesBtn.className = "btn-check-yes flex-1 md:w-24 py-2 rounded-xl border border-slate-200 font-semibold text-slate-400 hover:bg-slate-50 transition-all text-xs flex items-center justify-center space-x-1";
+        yesBtn.querySelector('.icon-dot').className = "icon-dot w-2 h-2 rounded-full bg-slate-300";
+        noBtn.className = "btn-check-no flex-1 md:w-28 py-2 rounded-xl border-2 border-rose-500 bg-rose-50 font-bold text-rose-700 transition-all text-xs flex items-center justify-center space-x-1 shadow-sm";
+        noBtn.querySelector('.icon-dot').className = "icon-dot w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse";
+      }
+      mdr_calculateLiveScore();
+    }
+
+    function mdr_calculateLiveScore() {
+      let totalYes = 0;
+      for (let i=1; i<=mdr_TOTAL_ITEMS; i++) if (mdr_currentRecord.items[i] === 'ปฏิบัติ') totalYes++;
+      const score = Number(((totalYes / mdr_TOTAL_ITEMS) * 100).toFixed(2)); 
+      mdr_currentRecord.complianceRate = score;
+      document.getElementById('mdr_liveScoreText').innerText = `${score.toFixed(2)}% (${totalYes}/${mdr_TOTAL_ITEMS})`;
+      const ring = document.getElementById('mdr_scoreIndicatorRing');
+      ring.innerText = `${totalYes}/${mdr_TOTAL_ITEMS}`;
+      if (score === 100) ring.className = "w-10 h-10 rounded-full border-2 border-purple-300 bg-purple-700 flex items-center justify-center font-bold text-xs text-white shadow-md hidden";
+      else if (score >= 80) ring.className = "w-10 h-10 rounded-full border-2 border-emerald-400 bg-emerald-500 flex items-center justify-center font-bold text-xs text-white hidden";
+      else if (score > 0) ring.className = "w-10 h-10 rounded-full border-2 border-amber-400 bg-amber-500 flex items-center justify-center font-bold text-xs text-white hidden";
+      else ring.className = "w-10 h-10 rounded-full border-2 border-slate-300 flex items-center justify-center font-bold text-xs hidden";
+    }
+
+    async function mdr_fetchDataFromSheet() {
+      if (!mdr_db.apiUrl) return false;
+      try {
+        const response = await fetch(mdr_db.apiUrl + '?action=fetch', { method: 'GET' });
+        const raw = await response.json();
+        if (!Array.isArray(raw) || raw.length < 2) return false;
+        const sheetRecords = [];
+        for (let i = 1; i < raw.length; i++) {
+          const row = raw[i];
+          if (!row[1]) continue; 
+          let dateVal = String(row[1]).slice(0, 10);
+          if (dateVal.length > 10 || isNaN(Date.parse(dateVal))) {
+            const d = new Date(row[1]); if (!isNaN(d)) dateVal = d.toISOString().slice(0, 10);
+          }
+          let rate = parseFloat(row[mdr_TOTAL_ITEMS + 2]) || 0;
+          if (rate > 0 && rate <= 1) rate = Number((rate * 100).toFixed(2)); else rate = Number(rate.toFixed(2));
+          const getItem = (val) => { const s = String(val || '').trim(); return (s === 'ปฏิบัติ' || s === 'ไม่ปฏิบัติ') ? s : null; };
+          const itemsParsed = {};
+          for(let j=1; j<=mdr_TOTAL_ITEMS; j++) itemsParsed[j] = getItem(row[j+1]);
+          sheetRecords.push({ id: `SHEET_${i}_${dateVal}`, date: dateVal, timestamp: String(row[0]), items: itemsParsed, complianceRate: rate, remarks: String(row[mdr_TOTAL_ITEMS + 3] || ''), synced: true });
+        }
+        if (sheetRecords.length === 0) return false;
+        const localUnsynced = mdr_db.records.filter(r => !r.synced);
+        mdr_db.records = [...sheetRecords, ...localUnsynced];
+        localStorage.setItem('mdro_records', JSON.stringify(mdr_db.records));
+        return true;
+      } catch (err) { console.error('Fetch Error:', err); return false; }
+    }
+
+    async function mdr_fetchAndRenderReports() {
+      const refreshIcon = document.getElementById('mdr_refreshIcon');
+      if (refreshIcon) refreshIcon.classList.add('animate-spin');
+      const success = await mdr_fetchDataFromSheet();
+      if (refreshIcon) refreshIcon.classList.remove('animate-spin');
+      mdr_renderReports(); mdr_renderHistory(); mdr_updateUnsyncedBadge();
+      const now = new Date(); const timeStr = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+      const lastUpdatedEl = document.getElementById('mdr_dashboardLastUpdated');
+      if (success) { if (lastUpdatedEl) lastUpdatedEl.innerHTML = `<span class="text-emerald-600 font-semibold">✓ อัปเดตล่าสุด: ${timeStr}</span>`; }
+      else { if (lastUpdatedEl) lastUpdatedEl.innerHTML = `<span class="text-amber-600 font-semibold">⚠ ทำงานแบบออฟไลน์</span>`; }
+    }
+
+    function mdr_switchTab(tabName) {
+      document.querySelectorAll('#app-mdr .tab-btn').forEach(btn => {
+        btn.classList.remove('border-purple-600', 'text-purple-600', 'font-semibold'); btn.classList.add('border-transparent', 'text-slate-500');
+      });
+      document.querySelectorAll('#app-mdr .tab-content').forEach(content => content.classList.add('hidden'));
+      document.getElementById(`mdr_btn-${tabName}`).classList.add('border-purple-600', 'text-purple-600', 'font-semibold');
+      document.getElementById(`mdr_btn-${tabName}`).classList.remove('border-transparent', 'text-slate-500');
+      document.getElementById(`mdr_tab-${tabName}-content`).classList.remove('hidden');
+      if (tabName === 'history') mdr_renderHistory(); else if (tabName === 'reports') mdr_fetchAndRenderReports();
+    }
+
+    function mdr_showModal(title, msg, type = 'info') {
+      const modal = document.getElementById('mdr_customModal'); const card = document.getElementById('mdr_modalCard');
+      document.getElementById('mdr_modalTitle').innerText = title; document.getElementById('mdr_modalMessage').innerText = msg;
+      ['Success', 'Error', 'Info'].forEach(t => document.getElementById(`mdr_modalIcon${t}`).classList.add('hidden'));
+      if(type==='success') document.getElementById('mdr_modalIconSuccess').classList.remove('hidden');
+      else if(type==='error') document.getElementById('mdr_modalIconError').classList.remove('hidden');
+      else document.getElementById('mdr_modalIconInfo').classList.remove('hidden');
+      modal.classList.remove('hidden'); setTimeout(() => { card.classList.remove('scale-95', 'opacity-0'); card.classList.add('scale-100', 'opacity-100'); }, 50);
+    }
+    function mdr_closeModal() {
+      const modal = document.getElementById('mdr_customModal'); const card = document.getElementById('mdr_modalCard');
+      card.classList.remove('scale-100', 'opacity-100'); card.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+    function mdr_showConfirmModal(title, msg, onConfirm, isDangerous = true) {
+      const modal = document.getElementById('mdr_customConfirmModal'); const card = document.getElementById('mdr_confirmModalCard');
+      const proceedBtn = document.getElementById('mdr_confirmProceedBtn');
+      document.getElementById('mdr_confirmModalTitle').innerText = title; document.getElementById('mdr_confirmModalMessage').innerText = msg;
+      proceedBtn.className = isDangerous ? "py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-xl text-sm transition-all shadow-md" : "py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl text-sm transition-all shadow-md";
+      mdr_activeConfirmCallback = onConfirm; modal.classList.remove('hidden');
+      setTimeout(() => { card.classList.remove('scale-95', 'opacity-0'); card.classList.add('scale-100', 'opacity-100'); }, 50);
+    }
+    function mdr_closeConfirmModal() {
+      const modal = document.getElementById('mdr_customConfirmModal'); const card = document.getElementById('mdr_confirmModalCard');
+      card.classList.remove('scale-100', 'opacity-100'); card.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => { modal.classList.add('hidden'); mdr_activeConfirmCallback = null; }, 200);
+    }
+    document.getElementById('mdr_confirmProceedBtn').addEventListener('click', () => { if (typeof mdr_activeConfirmCallback === 'function') mdr_activeConfirmCallback(); mdr_closeConfirmModal(); });
+
+    function mdr_updateStatusBadge() {
+      const badge = document.getElementById('mdr_connectionBadge');
+      if (mdr_db.apiUrl) {
+        badge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span><span class="hidden md:inline font-medium">พร้อมซิงค์คลาวด์</span>`;
+        badge.className = "flex items-center space-x-1 px-3 py-1 bg-emerald-900 bg-opacity-40 rounded-full text-xs text-emerald-100";
+      } else {
+        badge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span><span class="hidden md:inline font-medium">ออฟไลน์</span>`;
+        badge.className = "flex items-center space-x-1 px-3 py-1 bg-amber-900 bg-opacity-40 rounded-full text-xs text-amber-100";
+      }
+    }
+    function mdr_saveSettings() {
+      const urlInput = document.getElementById('mdr_apiEndpointUrl').value.trim();
+      mdr_db.apiUrl = urlInput; localStorage.setItem('mdro_api_url', urlInput);
+      mdr_updateStatusBadge(); mdr_showModal("สำเร็จ", "บันทึกการตั้งค่าลิงก์ Google Apps Script สำเร็จแล้ว", "success");
+    }
+    function mdr_testApiConnection() {
+      const url = document.getElementById('mdr_apiEndpointUrl').value.trim() || mdr_db.apiUrl;
+      if (!url) return mdr_showModal("ข้อผิดพลาด", "ระบุ URL ของ Web App ก่อนทดสอบ", "error");
+      mdr_showModal("รอสักครู่", "กำลังทดสอบเชื่อมต่อ API...", "info");
+      fetch(url, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "ping" }) })
+      .then(() => mdr_showModal("เชื่อมต่อสำเร็จ", "ระบบสามารถติดต่อ Google Sheet ได้", "success"))
+      .catch((err) => mdr_showModal("ล้มเหลว", "เกิดข้อผิดพลาด: " + err, "error"));
+    }
+    function mdr_submitAssessment() {
+      const dateVal = document.getElementById('mdr_evalDate').value; const remarksVal = document.getElementById('mdr_evalRemarks').value.trim();
+      if (!dateVal) return mdr_showModal("ข้อมูลไม่ครบ", "กรุณาระบุวันที่ประเมิน", "error");
+      const newRecord = { id: 'MDRO_' + Date.now() + '_' + Math.floor(Math.random()*1000), date: dateVal, items: { ...mdr_currentRecord.items }, complianceRate: mdr_currentRecord.complianceRate, remarks: remarksVal, timestamp: new Date().toISOString(), synced: false };
+      mdr_db.records.unshift(newRecord); localStorage.setItem('mdro_records', JSON.stringify(mdr_db.records));
+      mdr_updateUnsyncedBadge();
+      if (mdr_db.apiUrl) mdr_syncSingleRecord(newRecord.id, true);
+      else { mdr_showModal("บันทึกออฟไลน์", "บันทึกในเครื่องเรียบร้อย (ส่งขึ้น Sheet เมื่อพร้อม)", "success"); mdr_resetCurrentForm(); }
+    }
+    function mdr_resetCurrentForm() {
+      document.getElementById('mdr_evalRemarks').value = '';
+      mdr_currentRecord.items = {...mdr_defaultItems}; mdr_currentRecord.complianceRate = 0;
+      document.querySelectorAll('#app-mdr .card-bundle-item').forEach(card => {
+        card.querySelector('.btn-check-yes').className = "btn-check-yes flex-1 md:w-24 py-2 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 transition-all text-xs font-semibold flex items-center justify-center space-x-1";
+        card.querySelector('.btn-check-no').className = "btn-check-no flex-1 md:w-28 py-2 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 transition-all text-xs font-semibold flex items-center justify-center space-x-1";
+        card.querySelectorAll('.icon-dot').forEach(d => d.className="icon-dot w-2 h-2 rounded-full bg-slate-300");
+      });
+      mdr_calculateLiveScore();
+    }
+    function mdr_syncSingleRecord(recordId, isFromActiveForm = false) {
+      const idx = mdr_db.records.findIndex(r => r.id === recordId); if (idx === -1 || !mdr_db.apiUrl) return;
+      const record = mdr_db.records[idx];
+      const payload = { date: record.date, ward: "", shift: "", hn: "", patientName: "", evaluator: "", complianceRate: record.complianceRate, remarks: record.remarks };
+      for(let i=1; i<=mdr_TOTAL_ITEMS; i++) payload['item'+i] = record.items[i] || "";
+      fetch(mdr_db.apiUrl, { method: 'POST', mode: 'cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
+      .then(res => res.json()).then(result => {
+        if (result.status === "success") { mdr_db.records[idx].synced = true; localStorage.setItem('mdro_records', JSON.stringify(mdr_db.records)); mdr_updateUnsyncedBadge(); mdr_renderHistory(); if (isFromActiveForm) { mdr_showModal("สำเร็จ", "ส่งข้อมูลขึ้น Google Sheet เรียบร้อย", "success"); mdr_resetCurrentForm(); } }
+      }).catch(err => { if(isFromActiveForm) { mdr_showModal("ออฟไลน์ชั่วคราว", "บันทึกในเครื่องแล้ว แต่ยังส่งขึ้น Sheet ไม่ได้ กรุณากดซิงค์ภายหลัง", "info"); mdr_resetCurrentForm(); } });
+    }
+    function mdr_syncAllRecords() {
+      const unsynced = mdr_db.records.filter(r => !r.synced);
+      if (unsynced.length === 0) return mdr_showModal("ข้อมูลล่าสุดแล้ว", "ทุกรายการซิงค์ขึ้นระบบเรียบร้อย", "success");
+      mdr_showModal("กำลังดำเนินการ", `ส่งข้อมูลขึ้นคลาวด์ ${unsynced.length} รายการ...`, "info");
+      let chain = Promise.resolve();
+      unsynced.forEach(record => {
+        chain = chain.then(() => {
+          const payload = { date: record.date, ward: "", shift: "", hn: "", patientName: "", evaluator: "", complianceRate: record.complianceRate, remarks: record.remarks };
+          for(let i=1; i<=mdr_TOTAL_ITEMS; i++) payload['item'+i] = record.items[i] || "";
+          return fetch(mdr_db.apiUrl, { method: 'POST', mode: 'cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) }).then(res => res.json()).then(res => { if(res.status==="success") record.synced = true; }).catch(()=>{});
+        });
+      });
+      chain.then(() => { localStorage.setItem('mdro_records', JSON.stringify(mdr_db.records)); mdr_updateUnsyncedBadge(); mdr_renderHistory(); mdr_showModal("เสร็จสิ้น", "กระบวนการซิงค์ข้อมูลเสร็จสิ้น", "success"); });
+    }
+    function mdr_confirmClearHistory() {
+      mdr_showConfirmModal("ล้างประวัติ?", "ลบประวัติเฉพาะในเครื่องนี้? (ไม่ลบบน Sheet)", () => {
+        mdr_db.records = []; localStorage.setItem('mdro_records', '[]');
+        mdr_updateUnsyncedBadge(); mdr_renderHistory(); mdr_showModal("รีเซ็ตแล้ว", "ล้างข้อมูลในเครื่องเรียบร้อย", "success");
+      });
+    }
+    function mdr_deleteRecord(recordId) {
+      mdr_showConfirmModal("ลบรายการนี้?", "รายการนี้จะหายไปจากเครื่อง (ไม่ลบบน Sheet)", () => {
+        mdr_db.records = mdr_db.records.filter(r => r.id !== recordId);
+        localStorage.setItem('mdro_records', JSON.stringify(mdr_db.records));
+        mdr_updateUnsyncedBadge(); mdr_renderHistory();
+      });
+    }
+    function mdr_updateUnsyncedBadge() {
+      const unsynced = mdr_db.records.filter(r => !r.synced).length; const synced = mdr_db.records.filter(r => r.synced).length;
+      const badge = document.getElementById('mdr_unsyncedCountBadge');
+      if (unsynced > 0) { badge.innerText = unsynced; badge.classList.remove('hidden'); } else badge.classList.add('hidden');
+      document.getElementById('mdr_unsyncedCountTitle').innerText = `${unsynced} รายการ`; document.getElementById('mdr_syncedCountTitle').innerText = `${synced} รายการ`;
+    }
+    function mdr_renderHistory() {
+      const body = document.getElementById('mdr_historyListBody');
+      if (mdr_db.records.length === 0) { body.innerHTML = ''; document.getElementById('mdr_historyEmptyState').classList.remove('hidden'); return; }
+      document.getElementById('mdr_historyEmptyState').classList.add('hidden');
+      body.innerHTML = mdr_db.records.map(r => {
+        const syncBadge = r.synced ? `<span class="px-2 py-1 rounded bg-purple-50 text-purple-700 text-xs font-bold border border-purple-100">ซิงค์แล้ว</span>` : `<span class="px-2 py-1 rounded bg-amber-50 text-amber-700 text-xs font-bold border border-amber-100">รอซิงค์</span>`;
+        let color = r.complianceRate === 100 ? "text-emerald-700 bg-emerald-50 border-emerald-200" : (r.complianceRate >= 80 ? "text-purple-700 bg-purple-50 border-purple-200" : "text-rose-700 bg-rose-50 border-rose-200");
+        const parts = r.date.split('-'); const thDate = parts.length===3 ? `${parts[2]}/${parts[1]}/${parseInt(parts[0])+543}` : r.date;
+        let totalYes = 0;
+        const boxes = Object.keys(r.items).map(k => {
+            if (r.items[k] === 'ปฏิบัติ') totalYes++;
+            let bg = r.items[k] === 'ปฏิบัติ' ? 'bg-emerald-500' : (r.items[k] === 'ไม่ปฏิบัติ' ? 'bg-rose-500' : 'bg-slate-200');
+            return `<div class="w-3.5 h-3.5 rounded-sm ${bg} flex items-center justify-center text-[8px] text-white font-bold m-[1px]" title="ข้อ ${k}: ${r.items[k]||'ว่าง'}">${k}</div>`;
+        }).join('');
+        return `
+          <tr class="hover:bg-slate-50 border-b border-slate-100">
+            <td class="py-3 px-4 font-semibold">${thDate}</td>
+            <td class="py-3 px-4"><div class="flex flex-wrap max-w-[140px] mx-auto justify-center">${boxes}</div></td>
+            <td class="py-3 px-4 text-center">
+              <div class="inline-flex flex-col items-center justify-center px-2 py-1.5 rounded-lg border ${color} min-w-[4.5rem]">
+                <span class="text-xs font-bold leading-none mb-1">${Number(r.complianceRate).toFixed(2)}%</span>
+                <span class="text-[10px] font-semibold leading-none opacity-80">(${totalYes}/${mdr_TOTAL_ITEMS})</span>
+              </div>
+            </td>
+            <td class="py-3 px-4 text-center">${syncBadge}</td>
+            <td class="py-3 px-4 text-center">
+              <div class="flex justify-center space-x-1">
+                ${!r.synced ? `<button onclick="mdr_syncSingleRecord('${r.id}')" class="p-1 text-purple-600 hover:bg-purple-100 rounded"><i data-lucide="upload-cloud" class="w-4 h-4"></i></button>` : ''}
+                <button onclick="mdr_deleteRecord('${r.id}')" class="p-1 text-rose-500 hover:bg-rose-100 rounded"><i data-lucide="trash" class="w-4 h-4"></i></button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+    function mdr_setFilterType(type) {
+      mdr_currentFilterType = type;
+      document.querySelectorAll('#app-mdr .filter-tab-btn').forEach(btn => btn.className = "filter-tab-btn px-4 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:bg-slate-50");
+      document.getElementById(`mdr_filter-btn-${type}`).className = "filter-tab-btn px-4 py-2 rounded-lg text-xs font-bold transition-all bg-purple-600 text-white shadow-sm";
+      document.querySelectorAll('#app-mdr .filter-input-sub').forEach(el => el.classList.add('hidden'));
+      if(type !== 'all') {
+          document.getElementById('mdr_filterInputsContainer').classList.remove('hidden');
+          document.getElementById(`mdr_filter-input-${type}`).classList.remove('hidden');
+          if(type==='year') {
+              const yrs = [...new Set(mdr_db.records.map(r=>r.date.split('-')[0]))].filter(Boolean).sort().reverse();
+              if(!yrs.length) yrs.push(new Date().getFullYear().toString());
+              document.getElementById('mdr_filterYearVal').innerHTML = yrs.map(y=>`<option value="${y}">พ.ศ. ${parseInt(y)+543}</option>`).join('');
+          }
+      } else { document.getElementById('mdr_filterInputsContainer').classList.add('hidden'); }
+      mdr_renderReports();
+    }
+    function mdr_getFilteredRecords() {
+      let recs = [...mdr_db.records];
+      if (mdr_currentFilterType === 'month') {
+        const m = document.getElementById('mdr_filterMonthVal').value; if(m) recs = recs.filter(r => r.date.startsWith(m));
+      } else if (mdr_currentFilterType === 'year') {
+        const y = document.getElementById('mdr_filterYearVal').value; if(y) recs = recs.filter(r => r.date.startsWith(y));
+      } else if (mdr_currentFilterType === 'range') {
+        const s = document.getElementById('mdr_filterStartVal').value, e = document.getElementById('mdr_filterEndVal').value;
+        if(s) recs = recs.filter(r => r.date >= s); if(e) recs = recs.filter(r => r.date <= e);
+      }
+      return recs;
+    }
+    function mdr_renderReports() {
+      const records = mdr_getFilteredRecords(); const total = records.length;
+      document.getElementById('mdr_repTotalEvaluations').innerText = total;
+      if (total === 0) {
+        document.getElementById('mdr_repFullComplianceCount').innerText = "0"; document.getElementById('mdr_repFullCompliancePct').innerText = "0.00% (0/0) ของทั้งหมด"; document.getElementById('mdr_repCriticalImprovement').innerText = "ไม่มีข้อมูล";
+        document.getElementById('mdr_itemBreakdownContainer').innerHTML = `<div class="text-center py-6 text-slate-400 text-sm w-full lg:col-span-2">ไม่พบข้อมูลสถิติตามเงื่อนไขที่เลือก</div>`;
+        document.getElementById('mdr_chart1EmptyState').classList.remove('hidden'); if(mdr_comparisonChartInstance) mdr_comparisonChartInstance.destroy();
+        document.getElementById('mdr_chart2EmptyState').classList.remove('hidden'); const listContainer = document.getElementById('mdr_nonComplianceListContainer'); if(listContainer) listContainer.innerHTML = '';
+        return;
+      }
+      document.getElementById('mdr_chart1EmptyState').classList.add('hidden');
+      let fullC = 0; records.forEach(r => { if(r.complianceRate === 100) fullC++; });
+      document.getElementById('mdr_repFullComplianceCount').innerText = fullC; document.getElementById('mdr_repFullCompliancePct').innerText = `${((fullC/total)*100).toFixed(2)}% (${fullC}/${total}) ของทั้งหมด`;
+      const stats = {}; for(let i=1; i<=mdr_TOTAL_ITEMS; i++) stats[i] = { yes:0, no:0, text: mdr_checkListData[i] };
+      records.forEach(r => { for(let i=1; i<=mdr_TOTAL_ITEMS; i++) { if(r.items[i]==='ปฏิบัติ') stats[i].yes++; else if(r.items[i]==='ไม่ปฏิบัติ') stats[i].no++; } });
+      let lowestRate = 101, lowestItems = []; let html = "", lbls=[], dYes=[], dNo=[], fYes=[], fNo=[]; let ncDataArr = []; const tempDiv = document.createElement("div");
+      for(let i=1; i<=mdr_TOTAL_ITEMS; i++) {
+        const totalEval = stats[i].yes + stats[i].no; const pYes = totalEval > 0 ? Number(((stats[i].yes / totalEval) * 100).toFixed(2)) : 0; const pNo = totalEval > 0 ? Number(((stats[i].no / totalEval) * 100).toFixed(2)) : 0;
+        lbls.push(`ข้อ ${i}`); dYes.push(pYes); dNo.push(pNo); fYes.push(`${stats[i].yes}/${totalEval}`); fNo.push(`${stats[i].no}/${totalEval}`);
+        tempDiv.innerHTML = stats[i].text; const cleanText = tempDiv.textContent || tempDiv.innerText || "";
+        if(totalEval > 0) { if (pYes < lowestRate) { lowestRate = pYes; lowestItems = [`ข้อ ${i}. ${cleanText} (${pYes.toFixed(2)}%)`]; } else if (pYes === lowestRate) { lowestItems.push(`ข้อ ${i}. ${cleanText} (${pYes.toFixed(2)}%)`); } }
+        if (stats[i].no > 0) { ncDataArr.push({ item: i, label: [`ข้อ ${i}`, cleanText.substring(0, 35) + (cleanText.length > 35 ? '...' : '')], fullText: cleanText, noCount: stats[i].no, totalEval: totalEval, pct: pNo }); }
+        const noTextLabel = stats[i].no > 0 ? `<span class="font-bold text-rose-500">ไม่ปฏิบัติ: ${pNo.toFixed(2)}% (${stats[i].no}/${totalEval})</span>` : ``;
+        html += `
+          <div class="break-inside-avoid mb-4 flex flex-col justify-between bg-slate-50/80 p-4 rounded-xl border border-slate-100 hover:border-purple-200 transition-all shadow-sm">
+            <div class="font-semibold text-slate-800 text-[13px] leading-relaxed mb-3"><span class="text-purple-600 font-bold mr-1">ข้อ ${i}.</span>${stats[i].text}</div>
+            <div class="w-full">
+              <div class="flex justify-between items-end text-xs mb-1.5 px-0.5"><span class="font-bold text-emerald-600">ปฏิบัติ: ${pYes.toFixed(2)}% (${stats[i].yes}/${totalEval})</span>${noTextLabel}</div>
+              <div class="w-full bg-slate-200 rounded-full h-2.5 flex overflow-hidden shadow-inner">
+                <div class="bg-purple-500 h-full transition-all duration-1000" style="width: ${pYes}%"></div>
+                <div class="bg-rose-400 h-full transition-all duration-1000" style="width: ${pNo}%"></div>
+              </div>
+            </div>
+          </div>`;
+      }
+      const critEl = document.getElementById('mdr_repCriticalImprovement');
+      if (lowestRate < 100 && lowestItems.length > 0) { critEl.innerHTML = lowestItems.map(item => `<div class="mb-1.5 last:mb-0">${item}</div>`).join(''); } else { critEl.innerText = "สมบูรณ์ทุกข้อ"; }
+      document.getElementById('mdr_itemBreakdownContainer').innerHTML = html;
+      const ctx1 = document.getElementById('mdr_comparisonChartCanvas').getContext('2d');
+      if(mdr_comparisonChartInstance) mdr_comparisonChartInstance.destroy();
+      mdr_comparisonChartInstance = new Chart(ctx1, {
+        type: 'bar', plugins: [ChartDataLabels],
+        data: { labels: lbls, datasets: [ { label: 'ปฏิบัติ (%)', data: dYes, frac: fYes, backgroundColor: '#9333ea', borderRadius: 4 }, { label: 'ไม่ปฏิบัติ (%)', data: dNo, frac: fNo, backgroundColor: '#fb7185', borderRadius: 4 } ] },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { max: 100, ticks: { font:{family:'Prompt', size:10}, callback: v=>v+'%' } }, x: { ticks: { font:{family:'Prompt', size:10} } } }, plugins: { legend: { position: 'bottom', labels:{font:{family:'Prompt', size:12}} }, datalabels: { color: '#fff', font: {family:'Prompt', size:9, weight:'bold'}, formatter: v => v>0?Number(v).toFixed(2)+'%':'' }, tooltip: { callbacks: { label: function(context) { const dataset = context.dataset; const frac = dataset.frac[context.dataIndex]; return ` ${dataset.label}: ${Number(context.raw).toFixed(2)}% (${frac})`; } } } } }
+      });
+      const listContainer = document.getElementById('mdr_nonComplianceListContainer'); const emptyState2 = document.getElementById('mdr_chart2EmptyState');
+      if (listContainer && emptyState2) {
+        if (ncDataArr.length === 0) { listContainer.innerHTML = ''; emptyState2.classList.remove('hidden'); } else {
+            emptyState2.classList.add('hidden'); ncDataArr.sort((a, b) => b.pct - a.pct || b.noCount - a.noCount || a.item - b.item);
+            let listHtml = '';
+            ncDataArr.forEach((d, index) => {
+                const rank = index + 1; let rankBadge = "";
+                if (rank === 1) rankBadge = "bg-amber-500 text-white shadow-md border-amber-600"; else if (rank === 2) rankBadge = "bg-slate-400 text-white shadow-sm border-slate-500"; else if (rank === 3) rankBadge = "bg-amber-700 text-white shadow-sm border-amber-800"; else rankBadge = "bg-indigo-500 text-white shadow-sm border-indigo-600";
+                listHtml += `
+                  <div class="break-inside-avoid mb-3 bg-white p-2.5 rounded-lg border border-blue-100 shadow-sm hover:shadow-md transition-all">
+                    <div class="flex justify-between items-start gap-2">
+                      <div class="flex items-start gap-2 w-full">
+                         <div class="w-5 h-5 rounded-full ${rankBadge} border flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">${rank}</div>
+                         <div class="text-[11px] font-medium text-slate-700 leading-snug"><span class="font-bold text-rose-600">ข้อ ${d.item}.</span> ${d.fullText}</div>
+                      </div>
+                      <div class="shrink-0 text-right flex flex-col items-end">
+                         <div class="text-rose-600 font-bold text-[12px] leading-none mb-1">${d.noCount} <span class="text-[8px] font-medium text-rose-400">ครั้ง</span></div>
+                         <div class="text-[9px] font-semibold text-slate-500 bg-slate-50 px-1 py-0.5 rounded leading-none">${d.pct.toFixed(2)}% <span class="font-normal">(${d.noCount}/${d.totalEval})</span></div>
+                      </div>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-1 mt-2 ml-[28px]" style="width: calc(100% - 28px);">
+                       <div class="bg-rose-500 h-full rounded-full transition-all duration-1000" style="width: ${d.pct}%"></div>
                     </div>
                   </div>
                 `;
@@ -1768,7 +2225,12 @@
           <tr class="hover:bg-slate-50 border-b border-slate-100">
             <td class="py-3 px-4 font-semibold">${thDate}</td>
             <td class="py-3 px-4"><div class="flex flex-wrap max-w-[140px] mx-auto justify-center">${boxes}</div></td>
-            <td class="py-3 px-4 text-center"><span class="px-2 py-1 rounded-full text-xs font-bold border ${color}">${Number(r.complianceRate).toFixed(2)}% (${totalYes}/${cauti_TOTAL_ITEMS})</span></td>
+            <td class="py-3 px-4 text-center">
+              <div class="inline-flex flex-col items-center justify-center px-2 py-1.5 rounded-lg border ${color} min-w-[4.5rem]">
+                <span class="text-xs font-bold leading-none mb-1">${Number(r.complianceRate).toFixed(2)}%</span>
+                <span class="text-[10px] font-semibold leading-none opacity-80">(${totalYes}/${cauti_TOTAL_ITEMS})</span>
+              </div>
+            </td>
             <td class="py-3 px-4 text-center">${syncBadge}</td>
             <td class="py-3 px-4 text-center">
               <div class="flex justify-center space-x-1">
@@ -1904,410 +2366,6 @@
                     </div>
                     <div class="w-full bg-slate-100 rounded-full h-1.5 mt-2.5 ml-[34px]" style="width: calc(100% - 34px);">
                        <div class="${barColor} h-full rounded-full transition-all duration-1000" style="width: ${d.pct}%"></div>
-                    </div>
-                  </div>
-                `;
-            });
-            listContainer.innerHTML = listHtml;
-        }
-      }
-    }
-
-
-    // ==========================================
-    // MDR CHECKLIST LOGIC (Prefixed with mdr_)
-    // ==========================================
-    const mdr_TOTAL_ITEMS = 16;
-    const mdr_checkListData = {
-      1: "แจ้ง ICN ทันทีเมื่อมีผู้ป่วยติดเชื้อดื้อยามาใช้บริการ โทร 102",
-      2: "แจ้งบุคลากรทุกคนในหอผู้ป่วยทราบ",
-      3: "แยกผู้ป่วยในห้องแยกหรือโซนติดเชื้อชนิดเดียวกัน",
-      4: "ติดป้าย Contact precautions ที่เตียงหรือหน้าห้องผู้ป่วย",
-      5: "ไม่วางสิ่งของและอุปกรณ์ของใช้บนเตียงผู้ป่วย",
-      6: "แยกอุปกรณ์ของใช้เช่น ปรอทวัดไข้ เครื่องวัดความดัน หูฟัง รวมทั้งอุปกรณ์ทำความสะอาดเฉพาะรายต่อราย",
-      7: "จัดเตรียม Alcohol gel hand rub ไว้ที่หน้าห้องผู้ป่วย/ปลายเตียงผู้ป่วย",
-      8: "ล้างมือทุกครั้งก่อนและหลังสัมผัสผู้ป่วย หลังสัมผัสอุปกรณ์และสิ่งแวดล้อมในห้องผู้ป่วยด้วยน้ำยา 4% chlorhexidine gluconate",
-      9: "สวมอุปกรณ์ป้องกันร่างกาย (ถุงมือ เสื้อคลุม mask) และถอดถุงมือ เสื้อคลุมก่อนออกจากห้องผู้ป่วย (สวม PPE รายต่อรายเท่านั้น)",
-      10: "แยกผ้าและขยะเป็นประเภทติดเชื้อ",
-      11: "ทำความสะอาดสิ่งแวดล้อมภายในห้องอย่างน้อยวันละ 1 ครั้ง ด้วยน้ำยา POSEQUAT 5G และเมื่อจำหน่ายผู้ป่วยอย่างน้อย 3 ครั้ง",
-      12: "เคลื่อนย้ายผู้ป่วยแจ้งหน่วยงานที่เกี่ยวข้องและพนักงานเปลทราบพร้อมทั้งแขวนป้าย MDR",
-      13: "พนักงานเปลสวมถุงมือ เสื้อกาวน์ mask ถูกต้องเหมาะสม มีผ้าคลุมเปลอีก 1 ชั้นมีน้ำยาทำความสะอาดเปล/ Alcohol gel",
-      14: "จำกัดบุคลากร/ผู้เฝ้าไข้ให้น้อยที่สุดเข้าไปดูแลผู้ป่วยห้องแยก",
-      15: "ให้คำแนะนำผู้ป่วยและญาติในการปฏิบัติตัว (แจกแผ่นพับ)",
-      16: `ทำการเพาะเชื้อเพื่อยุติ contact precautions พิจารณาการยกเลิก contact precautions
-          <ul class="mt-1 space-y-1 text-[10px] sm:text-xs font-normal text-slate-500 pl-1">
-            <li class="flex items-start leading-tight"><span class="font-bold text-purple-500 mr-1 min-w-[10px]">1.</span> <span>เมื่อตรวจไม่พบเชื้อ อาการและอาการแสดงของการติดเชื้อหายไป</span></li>
-            <li class="flex items-start leading-tight"><span class="font-bold text-purple-500 mr-1 min-w-[10px]">2.</span> <span>ไม่ต้องนัดผู้ป่วยเพื่อมาทำการเพาะเชื้อ หากภายใน 6 เดือนผู้ป่วยมา Admit ให้ทำการเพาะเชื้อ ตาม Clinical specimen ผล Negative 2 ครั้งห่างกัน 7 วัน</span></li>
-            <li class="flex items-start leading-tight"><span class="font-bold text-purple-500 mr-1 min-w-[10px]">3.</span> <span>กรณี VRE/ CRE ทำ RSC for VRE / CRE 3 ครั้งห่างกัน 1 wk. ให้ผล Negative ยกเลิกได้ หากยังพบเชื้อให้ติดตามอีก 6 เดือน <span class="text-purple-400">(ทั้งนี้อยู่ในดุลยพินิจของแพทย์)</span></span></li>
-          </ul>`
-    };
-
-    const mdr_defaultItems = {};
-    for(let i=1; i<=mdr_TOTAL_ITEMS; i++) mdr_defaultItems[i] = null;
-    const mdr_GLOBAL_DEFAULT_API_URL = "https://script.google.com/macros/s/AKfycbxgTzi3myvmk0MAhA-et7xDoAMf_kr5ATEr0xnq0vLT9m778Wx1xBakmELTwTlqtowtDA/exec";
-
-    let mdr_db = {
-      records: JSON.parse(localStorage.getItem('mdro_records')) || [],
-      apiUrl: localStorage.getItem('mdro_api_url') || mdr_GLOBAL_DEFAULT_API_URL
-    };
-
-    let mdr_comparisonChartInstance = null;
-    let mdr_currentFilterType = 'all';
-    let mdr_currentRecord = { id: '', date: '', items: {...mdr_defaultItems}, complianceRate: 0, remarks: '', synced: false, timestamp: null };
-    let mdr_activeConfirmCallback = null;
-
-    function mdr_generateChecklistForm() {
-      const container = document.getElementById('mdr_bundleForm');
-      let html = '';
-      for (let i = 1; i <= mdr_TOTAL_ITEMS; i++) {
-        html += `
-          <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 hover:border-purple-300 transition-all card-bundle-item" data-index="${i}">
-            <div class="flex flex-col md:flex-row md:items-start justify-between gap-3">
-              <div class="flex items-start space-x-3 w-full md:w-2/3">
-                <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-purple-100 text-purple-800 font-bold text-xs flex-shrink-0 mt-0.5">${i}</span>
-                <div class="font-medium text-slate-800 text-sm leading-relaxed w-full pt-1.5 md:pt-1">${mdr_checkListData[i]}</div>
-              </div>
-              <div class="flex items-center space-x-2 pl-10 md:pl-0 w-full md:w-auto justify-start md:justify-end mt-2 md:mt-0">
-                <button onclick="mdr_setItemValue(${i}, 'ปฏิบัติ')" class="btn-check-yes flex-1 md:w-24 py-2 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 transition-all text-xs font-semibold flex items-center justify-center space-x-1">
-                  <span class="icon-dot w-2 h-2 rounded-full bg-slate-300"></span><span>ปฏิบัติ</span>
-                </button>
-                <button onclick="mdr_setItemValue(${i}, 'ไม่ปฏิบัติ')" class="btn-check-no flex-1 md:w-28 py-2 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 transition-all text-xs font-semibold flex items-center justify-center space-x-1">
-                  <span class="icon-dot w-2 h-2 rounded-full bg-slate-300"></span><span>ไม่ปฏิบัติ</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        `;
-      }
-      container.innerHTML = html;
-    }
-
-    function mdr_setItemValue(itemNum, value) {
-      mdr_currentRecord.items[itemNum] = value;
-      const card = document.querySelector(`#app-mdr .card-bundle-item[data-index="${itemNum}"]`);
-      const yesBtn = card.querySelector('.btn-check-yes');
-      const noBtn = card.querySelector('.btn-check-no');
-
-      if (value === 'ปฏิบัติ') {
-        yesBtn.className = "btn-check-yes flex-1 md:w-24 py-2 rounded-xl border-2 border-emerald-500 bg-emerald-50 font-bold text-emerald-700 transition-all text-xs flex items-center justify-center space-x-1 shadow-sm";
-        yesBtn.querySelector('.icon-dot').className = "icon-dot w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
-        noBtn.className = "btn-check-no flex-1 md:w-28 py-2 rounded-xl border border-slate-200 font-semibold text-slate-500 hover:bg-slate-50 transition-all text-xs flex items-center justify-center space-x-1";
-        noBtn.querySelector('.icon-dot').className = "icon-dot w-2 h-2 rounded-full bg-slate-300";
-      } else if (value === 'ไม่ปฏิบัติ') {
-        yesBtn.className = "btn-check-yes flex-1 md:w-24 py-2 rounded-xl border border-slate-200 font-semibold text-slate-400 hover:bg-slate-50 transition-all text-xs flex items-center justify-center space-x-1";
-        yesBtn.querySelector('.icon-dot').className = "icon-dot w-2 h-2 rounded-full bg-slate-300";
-        noBtn.className = "btn-check-no flex-1 md:w-28 py-2 rounded-xl border-2 border-rose-500 bg-rose-50 font-bold text-rose-700 transition-all text-xs flex items-center justify-center space-x-1 shadow-sm";
-        noBtn.querySelector('.icon-dot').className = "icon-dot w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse";
-      }
-      mdr_calculateLiveScore();
-    }
-
-    function mdr_calculateLiveScore() {
-      let totalYes = 0;
-      for (let i=1; i<=mdr_TOTAL_ITEMS; i++) if (mdr_currentRecord.items[i] === 'ปฏิบัติ') totalYes++;
-      const score = Number(((totalYes / mdr_TOTAL_ITEMS) * 100).toFixed(2)); 
-      mdr_currentRecord.complianceRate = score;
-      document.getElementById('mdr_liveScoreText').innerText = `${score.toFixed(2)}% (${totalYes}/${mdr_TOTAL_ITEMS})`;
-      const ring = document.getElementById('mdr_scoreIndicatorRing');
-      ring.innerText = `${totalYes}/${mdr_TOTAL_ITEMS}`;
-      if (score === 100) ring.className = "w-10 h-10 rounded-full border-2 border-purple-300 bg-purple-700 flex items-center justify-center font-bold text-xs text-white shadow-md hidden";
-      else if (score >= 80) ring.className = "w-10 h-10 rounded-full border-2 border-emerald-400 bg-emerald-500 flex items-center justify-center font-bold text-xs text-white hidden";
-      else if (score > 0) ring.className = "w-10 h-10 rounded-full border-2 border-amber-400 bg-amber-500 flex items-center justify-center font-bold text-xs text-white hidden";
-      else ring.className = "w-10 h-10 rounded-full border-2 border-slate-300 flex items-center justify-center font-bold text-xs hidden";
-    }
-
-    async function mdr_fetchDataFromSheet() {
-      if (!mdr_db.apiUrl) return false;
-      try {
-        const response = await fetch(mdr_db.apiUrl + '?action=fetch', { method: 'GET' });
-        const raw = await response.json();
-        if (!Array.isArray(raw) || raw.length < 2) return false;
-        const sheetRecords = [];
-        for (let i = 1; i < raw.length; i++) {
-          const row = raw[i];
-          if (!row[1]) continue; 
-          let dateVal = String(row[1]).slice(0, 10);
-          if (dateVal.length > 10 || isNaN(Date.parse(dateVal))) {
-            const d = new Date(row[1]); if (!isNaN(d)) dateVal = d.toISOString().slice(0, 10);
-          }
-          let rate = parseFloat(row[mdr_TOTAL_ITEMS + 2]) || 0;
-          if (rate > 0 && rate <= 1) rate = Number((rate * 100).toFixed(2)); else rate = Number(rate.toFixed(2));
-          const getItem = (val) => { const s = String(val || '').trim(); return (s === 'ปฏิบัติ' || s === 'ไม่ปฏิบัติ') ? s : null; };
-          const itemsParsed = {};
-          for(let j=1; j<=mdr_TOTAL_ITEMS; j++) itemsParsed[j] = getItem(row[j+1]);
-          sheetRecords.push({ id: `SHEET_${i}_${dateVal}`, date: dateVal, timestamp: String(row[0]), items: itemsParsed, complianceRate: rate, remarks: String(row[mdr_TOTAL_ITEMS + 3] || ''), synced: true });
-        }
-        if (sheetRecords.length === 0) return false;
-        const localUnsynced = mdr_db.records.filter(r => !r.synced);
-        mdr_db.records = [...sheetRecords, ...localUnsynced];
-        localStorage.setItem('mdro_records', JSON.stringify(mdr_db.records));
-        return true;
-      } catch (err) { console.error('Fetch Error:', err); return false; }
-    }
-
-    async function mdr_fetchAndRenderReports() {
-      const refreshIcon = document.getElementById('mdr_refreshIcon');
-      if (refreshIcon) refreshIcon.classList.add('animate-spin');
-      const success = await mdr_fetchDataFromSheet();
-      if (refreshIcon) refreshIcon.classList.remove('animate-spin');
-      mdr_renderReports(); mdr_renderHistory(); mdr_updateUnsyncedBadge();
-      const now = new Date(); const timeStr = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
-      const lastUpdatedEl = document.getElementById('mdr_dashboardLastUpdated');
-      if (success) { if (lastUpdatedEl) lastUpdatedEl.innerHTML = `<span class="text-emerald-600 font-semibold">✓ อัปเดตล่าสุด: ${timeStr}</span>`; }
-      else { if (lastUpdatedEl) lastUpdatedEl.innerHTML = `<span class="text-amber-600 font-semibold">⚠ ทำงานแบบออฟไลน์</span>`; }
-    }
-
-    function mdr_switchTab(tabName) {
-      document.querySelectorAll('#app-mdr .tab-btn').forEach(btn => {
-        btn.classList.remove('border-purple-600', 'text-purple-600', 'font-semibold'); btn.classList.add('border-transparent', 'text-slate-500');
-      });
-      document.querySelectorAll('#app-mdr .tab-content').forEach(content => content.classList.add('hidden'));
-      document.getElementById(`mdr_btn-${tabName}`).classList.add('border-purple-600', 'text-purple-600', 'font-semibold');
-      document.getElementById(`mdr_btn-${tabName}`).classList.remove('border-transparent', 'text-slate-500');
-      document.getElementById(`mdr_tab-${tabName}-content`).classList.remove('hidden');
-      if (tabName === 'history') mdr_renderHistory(); else if (tabName === 'reports') mdr_fetchAndRenderReports();
-    }
-
-    function mdr_showModal(title, msg, type = 'info') {
-      const modal = document.getElementById('mdr_customModal'); const card = document.getElementById('mdr_modalCard');
-      document.getElementById('mdr_modalTitle').innerText = title; document.getElementById('mdr_modalMessage').innerText = msg;
-      ['Success', 'Error', 'Info'].forEach(t => document.getElementById(`mdr_modalIcon${t}`).classList.add('hidden'));
-      if(type==='success') document.getElementById('mdr_modalIconSuccess').classList.remove('hidden');
-      else if(type==='error') document.getElementById('mdr_modalIconError').classList.remove('hidden');
-      else document.getElementById('mdr_modalIconInfo').classList.remove('hidden');
-      modal.classList.remove('hidden'); setTimeout(() => { card.classList.remove('scale-95', 'opacity-0'); card.classList.add('scale-100', 'opacity-100'); }, 50);
-    }
-    function mdr_closeModal() {
-      const modal = document.getElementById('mdr_customModal'); const card = document.getElementById('mdr_modalCard');
-      card.classList.remove('scale-100', 'opacity-100'); card.classList.add('scale-95', 'opacity-0');
-      setTimeout(() => modal.classList.add('hidden'), 200);
-    }
-    function mdr_showConfirmModal(title, msg, onConfirm, isDangerous = true) {
-      const modal = document.getElementById('mdr_customConfirmModal'); const card = document.getElementById('mdr_confirmModalCard');
-      const proceedBtn = document.getElementById('mdr_confirmProceedBtn');
-      document.getElementById('mdr_confirmModalTitle').innerText = title; document.getElementById('mdr_confirmModalMessage').innerText = msg;
-      proceedBtn.className = isDangerous ? "py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-xl text-sm transition-all shadow-md" : "py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl text-sm transition-all shadow-md";
-      mdr_activeConfirmCallback = onConfirm; modal.classList.remove('hidden');
-      setTimeout(() => { card.classList.remove('scale-95', 'opacity-0'); card.classList.add('scale-100', 'opacity-100'); }, 50);
-    }
-    function mdr_closeConfirmModal() {
-      const modal = document.getElementById('mdr_customConfirmModal'); const card = document.getElementById('mdr_confirmModalCard');
-      card.classList.remove('scale-100', 'opacity-100'); card.classList.add('scale-95', 'opacity-0');
-      setTimeout(() => { modal.classList.add('hidden'); mdr_activeConfirmCallback = null; }, 200);
-    }
-    document.getElementById('mdr_confirmProceedBtn').addEventListener('click', () => { if (typeof mdr_activeConfirmCallback === 'function') mdr_activeConfirmCallback(); mdr_closeConfirmModal(); });
-
-    function mdr_updateStatusBadge() {
-      const badge = document.getElementById('mdr_connectionBadge');
-      if (mdr_db.apiUrl) {
-        badge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span><span class="hidden md:inline font-medium">พร้อมซิงค์คลาวด์</span>`;
-        badge.className = "flex items-center space-x-1 px-3 py-1 bg-emerald-900 bg-opacity-40 rounded-full text-xs text-emerald-100";
-      } else {
-        badge.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span><span class="hidden md:inline font-medium">ออฟไลน์</span>`;
-        badge.className = "flex items-center space-x-1 px-3 py-1 bg-amber-900 bg-opacity-40 rounded-full text-xs text-amber-100";
-      }
-    }
-    function mdr_saveSettings() {
-      const urlInput = document.getElementById('mdr_apiEndpointUrl').value.trim();
-      mdr_db.apiUrl = urlInput; localStorage.setItem('mdro_api_url', urlInput);
-      mdr_updateStatusBadge(); mdr_showModal("สำเร็จ", "บันทึกการตั้งค่าลิงก์ Google Apps Script สำเร็จแล้ว", "success");
-    }
-    function mdr_testApiConnection() {
-      const url = document.getElementById('mdr_apiEndpointUrl').value.trim() || mdr_db.apiUrl;
-      if (!url) return mdr_showModal("ข้อผิดพลาด", "ระบุ URL ของ Web App ก่อนทดสอบ", "error");
-      mdr_showModal("รอสักครู่", "กำลังทดสอบเชื่อมต่อ API...", "info");
-      fetch(url, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ action: "ping" }) })
-      .then(() => mdr_showModal("เชื่อมต่อสำเร็จ", "ระบบสามารถติดต่อ Google Sheet ได้", "success"))
-      .catch((err) => mdr_showModal("ล้มเหลว", "เกิดข้อผิดพลาด: " + err, "error"));
-    }
-    function mdr_submitAssessment() {
-      const dateVal = document.getElementById('mdr_evalDate').value; const remarksVal = document.getElementById('mdr_evalRemarks').value.trim();
-      if (!dateVal) return mdr_showModal("ข้อมูลไม่ครบ", "กรุณาระบุวันที่ประเมิน", "error");
-      const newRecord = { id: 'MDRO_' + Date.now() + '_' + Math.floor(Math.random()*1000), date: dateVal, items: { ...mdr_currentRecord.items }, complianceRate: mdr_currentRecord.complianceRate, remarks: remarksVal, timestamp: new Date().toISOString(), synced: false };
-      mdr_db.records.unshift(newRecord); localStorage.setItem('mdro_records', JSON.stringify(mdr_db.records));
-      mdr_updateUnsyncedBadge();
-      if (mdr_db.apiUrl) mdr_syncSingleRecord(newRecord.id, true);
-      else { mdr_showModal("บันทึกออฟไลน์", "บันทึกในเครื่องเรียบร้อย (ส่งขึ้น Sheet เมื่อพร้อม)", "success"); mdr_resetCurrentForm(); }
-    }
-    function mdr_resetCurrentForm() {
-      document.getElementById('mdr_evalRemarks').value = '';
-      mdr_currentRecord.items = {...mdr_defaultItems}; mdr_currentRecord.complianceRate = 0;
-      document.querySelectorAll('#app-mdr .card-bundle-item').forEach(card => {
-        card.querySelector('.btn-check-yes').className = "btn-check-yes flex-1 md:w-24 py-2 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 transition-all text-xs font-semibold flex items-center justify-center space-x-1";
-        card.querySelector('.btn-check-no').className = "btn-check-no flex-1 md:w-28 py-2 rounded-xl border border-slate-200 text-slate-500 hover:bg-slate-50 transition-all text-xs font-semibold flex items-center justify-center space-x-1";
-        card.querySelectorAll('.icon-dot').forEach(d => d.className="icon-dot w-2 h-2 rounded-full bg-slate-300");
-      });
-      mdr_calculateLiveScore();
-    }
-    function mdr_syncSingleRecord(recordId, isFromActiveForm = false) {
-      const idx = mdr_db.records.findIndex(r => r.id === recordId); if (idx === -1 || !mdr_db.apiUrl) return;
-      const record = mdr_db.records[idx];
-      const payload = { date: record.date, ward: "", shift: "", hn: "", patientName: "", evaluator: "", complianceRate: record.complianceRate, remarks: record.remarks };
-      for(let i=1; i<=mdr_TOTAL_ITEMS; i++) payload['item'+i] = record.items[i] || "";
-      fetch(mdr_db.apiUrl, { method: 'POST', mode: 'cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
-      .then(res => res.json()).then(result => {
-        if (result.status === "success") { mdr_db.records[idx].synced = true; localStorage.setItem('mdro_records', JSON.stringify(mdr_db.records)); mdr_updateUnsyncedBadge(); mdr_renderHistory(); if (isFromActiveForm) { mdr_showModal("สำเร็จ", "ส่งข้อมูลขึ้น Google Sheet เรียบร้อย", "success"); mdr_resetCurrentForm(); } }
-      }).catch(err => { if(isFromActiveForm) { mdr_showModal("ออฟไลน์ชั่วคราว", "บันทึกในเครื่องแล้ว แต่ยังส่งขึ้น Sheet ไม่ได้ กรุณากดซิงค์ภายหลัง", "info"); mdr_resetCurrentForm(); } });
-    }
-    function mdr_syncAllRecords() {
-      const unsynced = mdr_db.records.filter(r => !r.synced);
-      if (unsynced.length === 0) return mdr_showModal("ข้อมูลล่าสุดแล้ว", "ทุกรายการซิงค์ขึ้นระบบเรียบร้อย", "success");
-      mdr_showModal("กำลังดำเนินการ", `ส่งข้อมูลขึ้นคลาวด์ ${unsynced.length} รายการ...`, "info");
-      let chain = Promise.resolve();
-      unsynced.forEach(record => {
-        chain = chain.then(() => {
-          const payload = { date: record.date, ward: "", shift: "", hn: "", patientName: "", evaluator: "", complianceRate: record.complianceRate, remarks: record.remarks };
-          for(let i=1; i<=mdr_TOTAL_ITEMS; i++) payload['item'+i] = record.items[i] || "";
-          return fetch(mdr_db.apiUrl, { method: 'POST', mode: 'cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) }).then(res => res.json()).then(res => { if(res.status==="success") record.synced = true; }).catch(()=>{});
-        });
-      });
-      chain.then(() => { localStorage.setItem('mdro_records', JSON.stringify(mdr_db.records)); mdr_updateUnsyncedBadge(); mdr_renderHistory(); mdr_showModal("เสร็จสิ้น", "กระบวนการซิงค์ข้อมูลเสร็จสิ้น", "success"); });
-    }
-    function mdr_confirmClearHistory() {
-      mdr_showConfirmModal("ล้างประวัติ?", "ลบประวัติเฉพาะในเครื่องนี้? (ไม่ลบบน Sheet)", () => {
-        mdr_db.records = []; localStorage.setItem('mdro_records', '[]');
-        mdr_updateUnsyncedBadge(); mdr_renderHistory(); mdr_showModal("รีเซ็ตแล้ว", "ล้างข้อมูลในเครื่องเรียบร้อย", "success");
-      });
-    }
-    function mdr_deleteRecord(recordId) {
-      mdr_showConfirmModal("ลบรายการนี้?", "รายการนี้จะหายไปจากเครื่อง (ไม่ลบบน Sheet)", () => {
-        mdr_db.records = mdr_db.records.filter(r => r.id !== recordId);
-        localStorage.setItem('mdro_records', JSON.stringify(mdr_db.records));
-        mdr_updateUnsyncedBadge(); mdr_renderHistory();
-      });
-    }
-    function mdr_updateUnsyncedBadge() {
-      const unsynced = mdr_db.records.filter(r => !r.synced).length; const synced = mdr_db.records.filter(r => r.synced).length;
-      const badge = document.getElementById('mdr_unsyncedCountBadge');
-      if (unsynced > 0) { badge.innerText = unsynced; badge.classList.remove('hidden'); } else badge.classList.add('hidden');
-      document.getElementById('mdr_unsyncedCountTitle').innerText = `${unsynced} รายการ`; document.getElementById('mdr_syncedCountTitle').innerText = `${synced} รายการ`;
-    }
-    function mdr_renderHistory() {
-      const body = document.getElementById('mdr_historyListBody');
-      if (mdr_db.records.length === 0) { body.innerHTML = ''; document.getElementById('mdr_historyEmptyState').classList.remove('hidden'); return; }
-      document.getElementById('mdr_historyEmptyState').classList.add('hidden');
-      body.innerHTML = mdr_db.records.map(r => {
-        const syncBadge = r.synced ? `<span class="px-2 py-1 rounded bg-purple-50 text-purple-700 text-xs font-bold border border-purple-100">ซิงค์แล้ว</span>` : `<span class="px-2 py-1 rounded bg-amber-50 text-amber-700 text-xs font-bold border border-amber-100">รอซิงค์</span>`;
-        let color = r.complianceRate === 100 ? "text-emerald-700 bg-emerald-50 border-emerald-200" : (r.complianceRate >= 80 ? "text-purple-700 bg-purple-50 border-purple-200" : "text-rose-700 bg-rose-50 border-rose-200");
-        const parts = r.date.split('-'); const thDate = parts.length===3 ? `${parts[2]}/${parts[1]}/${parseInt(parts[0])+543}` : r.date;
-        let totalYes = 0;
-        const boxes = Object.keys(r.items).map(k => {
-            if (r.items[k] === 'ปฏิบัติ') totalYes++;
-            let bg = r.items[k] === 'ปฏิบัติ' ? 'bg-emerald-500' : (r.items[k] === 'ไม่ปฏิบัติ' ? 'bg-rose-500' : 'bg-slate-200');
-            return `<div class="w-3.5 h-3.5 rounded-sm ${bg} flex items-center justify-center text-[8px] text-white font-bold m-[1px]" title="ข้อ ${k}: ${r.items[k]||'ว่าง'}">${k}</div>`;
-        }).join('');
-        return `
-          <tr class="hover:bg-slate-50 border-b border-slate-100">
-            <td class="py-3 px-4 font-semibold">${thDate}</td>
-            <td class="py-3 px-4"><div class="flex flex-wrap max-w-[140px] mx-auto justify-center">${boxes}</div></td>
-            <td class="py-3 px-4 text-center"><span class="px-2 py-1 rounded-full text-xs font-bold border ${color}">${Number(r.complianceRate).toFixed(2)}% (${totalYes}/${mdr_TOTAL_ITEMS})</span></td>
-            <td class="py-3 px-4 text-center">${syncBadge}</td>
-            <td class="py-3 px-4 text-center">
-              <div class="flex justify-center space-x-1">
-                ${!r.synced ? `<button onclick="mdr_syncSingleRecord('${r.id}')" class="p-1 text-purple-600 hover:bg-purple-100 rounded"><i data-lucide="upload-cloud" class="w-4 h-4"></i></button>` : ''}
-                <button onclick="mdr_deleteRecord('${r.id}')" class="p-1 text-rose-500 hover:bg-rose-100 rounded"><i data-lucide="trash" class="w-4 h-4"></i></button>
-              </div>
-            </td>
-          </tr>
-        `;
-      }).join('');
-      lucide.createIcons();
-    }
-    function mdr_setFilterType(type) {
-      mdr_currentFilterType = type;
-      document.querySelectorAll('#app-mdr .filter-tab-btn').forEach(btn => btn.className = "filter-tab-btn px-4 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:bg-slate-50");
-      document.getElementById(`mdr_filter-btn-${type}`).className = "filter-tab-btn px-4 py-2 rounded-lg text-xs font-bold transition-all bg-purple-600 text-white shadow-sm";
-      document.querySelectorAll('#app-mdr .filter-input-sub').forEach(el => el.classList.add('hidden'));
-      if(type !== 'all') {
-          document.getElementById('mdr_filterInputsContainer').classList.remove('hidden');
-          document.getElementById(`mdr_filter-input-${type}`).classList.remove('hidden');
-          if(type==='year') {
-              const yrs = [...new Set(mdr_db.records.map(r=>r.date.split('-')[0]))].filter(Boolean).sort().reverse();
-              if(!yrs.length) yrs.push(new Date().getFullYear().toString());
-              document.getElementById('mdr_filterYearVal').innerHTML = yrs.map(y=>`<option value="${y}">พ.ศ. ${parseInt(y)+543}</option>`).join('');
-          }
-      } else { document.getElementById('mdr_filterInputsContainer').classList.add('hidden'); }
-      mdr_renderReports();
-    }
-    function mdr_getFilteredRecords() {
-      let recs = [...mdr_db.records];
-      if (mdr_currentFilterType === 'month') {
-        const m = document.getElementById('mdr_filterMonthVal').value; if(m) recs = recs.filter(r => r.date.startsWith(m));
-      } else if (mdr_currentFilterType === 'year') {
-        const y = document.getElementById('mdr_filterYearVal').value; if(y) recs = recs.filter(r => r.date.startsWith(y));
-      } else if (mdr_currentFilterType === 'range') {
-        const s = document.getElementById('mdr_filterStartVal').value, e = document.getElementById('mdr_filterEndVal').value;
-        if(s) recs = recs.filter(r => r.date >= s); if(e) recs = recs.filter(r => r.date <= e);
-      }
-      return recs;
-    }
-    function mdr_renderReports() {
-      const records = mdr_getFilteredRecords(); const total = records.length;
-      document.getElementById('mdr_repTotalEvaluations').innerText = total;
-      if (total === 0) {
-        document.getElementById('mdr_repFullComplianceCount').innerText = "0"; document.getElementById('mdr_repFullCompliancePct').innerText = "0.00% (0/0) ของทั้งหมด"; document.getElementById('mdr_repCriticalImprovement').innerText = "ไม่มีข้อมูล";
-        document.getElementById('mdr_itemBreakdownContainer').innerHTML = `<div class="text-center py-6 text-slate-400 text-sm w-full lg:col-span-2">ไม่พบข้อมูลสถิติตามเงื่อนไขที่เลือก</div>`;
-        document.getElementById('mdr_chart1EmptyState').classList.remove('hidden'); if(mdr_comparisonChartInstance) mdr_comparisonChartInstance.destroy();
-        document.getElementById('mdr_chart2EmptyState').classList.remove('hidden'); const listContainer = document.getElementById('mdr_nonComplianceListContainer'); if(listContainer) listContainer.innerHTML = '';
-        return;
-      }
-      document.getElementById('mdr_chart1EmptyState').classList.add('hidden');
-      let fullC = 0; records.forEach(r => { if(r.complianceRate === 100) fullC++; });
-      document.getElementById('mdr_repFullComplianceCount').innerText = fullC; document.getElementById('mdr_repFullCompliancePct').innerText = `${((fullC/total)*100).toFixed(2)}% (${fullC}/${total}) ของทั้งหมด`;
-      const stats = {}; for(let i=1; i<=mdr_TOTAL_ITEMS; i++) stats[i] = { yes:0, no:0, text: mdr_checkListData[i] };
-      records.forEach(r => { for(let i=1; i<=mdr_TOTAL_ITEMS; i++) { if(r.items[i]==='ปฏิบัติ') stats[i].yes++; else if(r.items[i]==='ไม่ปฏิบัติ') stats[i].no++; } });
-      let lowestRate = 101, lowestItems = []; let html = "", lbls=[], dYes=[], dNo=[], fYes=[], fNo=[]; let ncDataArr = []; const tempDiv = document.createElement("div");
-      for(let i=1; i<=mdr_TOTAL_ITEMS; i++) {
-        const totalEval = stats[i].yes + stats[i].no; const pYes = totalEval > 0 ? Number(((stats[i].yes / totalEval) * 100).toFixed(2)) : 0; const pNo = totalEval > 0 ? Number(((stats[i].no / totalEval) * 100).toFixed(2)) : 0;
-        lbls.push(`ข้อ ${i}`); dYes.push(pYes); dNo.push(pNo); fYes.push(`${stats[i].yes}/${totalEval}`); fNo.push(`${stats[i].no}/${totalEval}`);
-        tempDiv.innerHTML = stats[i].text; const cleanText = tempDiv.textContent || tempDiv.innerText || "";
-        if(totalEval > 0) { if (pYes < lowestRate) { lowestRate = pYes; lowestItems = [`ข้อ ${i}. ${cleanText} (${pYes.toFixed(2)}%)`]; } else if (pYes === lowestRate) { lowestItems.push(`ข้อ ${i}. ${cleanText} (${pYes.toFixed(2)}%)`); } }
-        if (stats[i].no > 0) { ncDataArr.push({ item: i, label: [`ข้อ ${i}`, cleanText.substring(0, 35) + (cleanText.length > 35 ? '...' : '')], fullText: cleanText, noCount: stats[i].no, totalEval: totalEval, pct: pNo }); }
-        const noTextLabel = stats[i].no > 0 ? `<span class="font-bold text-rose-500">ไม่ปฏิบัติ: ${pNo.toFixed(2)}% (${stats[i].no}/${totalEval})</span>` : ``;
-        html += `
-          <div class="break-inside-avoid mb-4 flex flex-col justify-between bg-slate-50/80 p-4 rounded-xl border border-slate-100 hover:border-purple-200 transition-all shadow-sm">
-            <div class="font-semibold text-slate-800 text-[13px] leading-relaxed mb-3"><span class="text-purple-600 font-bold mr-1">ข้อ ${i}.</span>${stats[i].text}</div>
-            <div class="w-full">
-              <div class="flex justify-between items-end text-xs mb-1.5 px-0.5"><span class="font-bold text-emerald-600">ปฏิบัติ: ${pYes.toFixed(2)}% (${stats[i].yes}/${totalEval})</span>${noTextLabel}</div>
-              <div class="w-full bg-slate-200 rounded-full h-2.5 flex overflow-hidden shadow-inner">
-                <div class="bg-purple-500 h-full transition-all duration-1000" style="width: ${pYes}%"></div>
-                <div class="bg-rose-400 h-full transition-all duration-1000" style="width: ${pNo}%"></div>
-              </div>
-            </div>
-          </div>`;
-      }
-      const critEl = document.getElementById('mdr_repCriticalImprovement');
-      if (lowestRate < 100 && lowestItems.length > 0) { critEl.innerHTML = lowestItems.map(item => `<div class="mb-1.5 last:mb-0">${item}</div>`).join(''); } else { critEl.innerText = "สมบูรณ์ทุกข้อ"; }
-      document.getElementById('mdr_itemBreakdownContainer').innerHTML = html;
-      const ctx1 = document.getElementById('mdr_comparisonChartCanvas').getContext('2d');
-      if(mdr_comparisonChartInstance) mdr_comparisonChartInstance.destroy();
-      mdr_comparisonChartInstance = new Chart(ctx1, {
-        type: 'bar', plugins: [ChartDataLabels],
-        data: { labels: lbls, datasets: [ { label: 'ปฏิบัติ (%)', data: dYes, frac: fYes, backgroundColor: '#9333ea', borderRadius: 4 }, { label: 'ไม่ปฏิบัติ (%)', data: dNo, frac: fNo, backgroundColor: '#fb7185', borderRadius: 4 } ] },
-        options: { responsive: true, maintainAspectRatio: false, scales: { y: { max: 100, ticks: { font:{family:'Prompt', size:10}, callback: v=>v+'%' } }, x: { ticks: { font:{family:'Prompt', size:10} } } }, plugins: { legend: { position: 'bottom', labels:{font:{family:'Prompt', size:12}} }, datalabels: { color: '#fff', font: {family:'Prompt', size:9, weight:'bold'}, formatter: v => v>0?Number(v).toFixed(2)+'%':'' }, tooltip: { callbacks: { label: function(context) { const dataset = context.dataset; const frac = dataset.frac[context.dataIndex]; return ` ${dataset.label}: ${Number(context.raw).toFixed(2)}% (${frac})`; } } } } }
-      });
-      const listContainer = document.getElementById('mdr_nonComplianceListContainer'); const emptyState2 = document.getElementById('mdr_chart2EmptyState');
-      if (listContainer && emptyState2) {
-        if (ncDataArr.length === 0) { listContainer.innerHTML = ''; emptyState2.classList.remove('hidden'); } else {
-            emptyState2.classList.add('hidden'); ncDataArr.sort((a, b) => b.pct - a.pct || b.noCount - a.noCount || a.item - b.item);
-            let listHtml = '';
-            ncDataArr.forEach((d, index) => {
-                const rank = index + 1; let rankBadge = "";
-                if (rank === 1) rankBadge = "bg-amber-500 text-white shadow-md border-amber-600"; else if (rank === 2) rankBadge = "bg-slate-400 text-white shadow-sm border-slate-500"; else if (rank === 3) rankBadge = "bg-amber-700 text-white shadow-sm border-amber-800"; else rankBadge = "bg-indigo-500 text-white shadow-sm border-indigo-600";
-                listHtml += `
-                  <div class="break-inside-avoid mb-3 bg-white p-2.5 rounded-lg border border-blue-100 shadow-sm hover:shadow-md transition-all">
-                    <div class="flex justify-between items-start gap-2">
-                      <div class="flex items-start gap-2 w-full">
-                         <div class="w-5 h-5 rounded-full ${rankBadge} border flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">${rank}</div>
-                         <div class="text-[11px] font-medium text-slate-700 leading-snug"><span class="font-bold text-rose-600">ข้อ ${d.item}.</span> ${d.fullText}</div>
-                      </div>
-                      <div class="shrink-0 text-right flex flex-col items-end">
-                         <div class="text-rose-600 font-bold text-[12px] leading-none mb-1">${d.noCount} <span class="text-[8px] font-medium text-rose-400">ครั้ง</span></div>
-                         <div class="text-[9px] font-semibold text-slate-500 bg-slate-50 px-1 py-0.5 rounded leading-none">${d.pct.toFixed(2)}% <span class="font-normal">(${d.noCount}/${d.totalEval})</span></div>
-                      </div>
-                    </div>
-                    <div class="w-full bg-slate-100 rounded-full h-1 mt-2 ml-[28px]" style="width: calc(100% - 28px);">
-                       <div class="bg-rose-500 h-full rounded-full transition-all duration-1000" style="width: ${d.pct}%"></div>
                     </div>
                   </div>
                 `;
