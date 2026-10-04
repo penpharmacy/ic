@@ -2799,38 +2799,7 @@ function bc_renderDeptChart(records) {
     </table>
   `;
 }
-]
-    },
-    options: {
-      indexAxis: 'y', // เพิ่มส่วนนี้เพื่อให้กราฟเป็นแนวนอน
-      responsive: true, maintainAspectRatio: false,
-      scales: {
-        // สลับ x และ y 
-        x: { beginAtZero: true, max: 110, ticks: { stepSize: 20, callback: v => v <= 100 ? v + '%' : '', font: { family: 'Prompt', size: 10 } } },
-        y: { ticks: { font: { family: 'Prompt', size: 11 } } }
-      },
-      plugins: {
-       legend: {
-  position: 'bottom',
-  labels: {
-    font: { family: 'Prompt', size: 12 },
-    generateLabels: () => [
-      { text: 'ปฏิบัติ (สีเข้ม)', fillStyle: '#475569', strokeStyle: '#475569', datasetIndex: 0 },
-      { text: 'ไม่ปฏิบัติ (สีอ่อน)', fillStyle: '#CBD5E1', strokeStyle: '#475569', lineWidth: 1.5, datasetIndex: 1 }
-    ]
-  }
-},
-        datalabels: { anchor: 'end', align: 'end', color: '#1e293b', font: { family: 'Prompt', size: 10, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' },
-        tooltip: {
-          callbacks: {
-            label: c => ` ${c.dataset.label}: ${Number(c.raw).toFixed(2)}% (${c.dataset.counts[c.dataIndex]}/${rows[c.dataIndex].total} ข้อ)`,
-            afterBody: items => `ประเมิน ${rows[items[0].dataIndex].n} ครั้ง`
-          }
-        }
-      },
-      layout: { padding: { top: 10, right: 40, bottom: 10 } } // ปรับ padding ขวาเพื่อไม่ให้ตัวเลข DataLabels ขาดหาย
-    }
-  });
+
     function bc_renderReports() {
       const records = bc_getFilteredRecords(); const total = records.length;
       document.getElementById('bc_repTotalEvaluations').innerText = total;
