@@ -2751,7 +2751,7 @@ function bc_renderDeptChart(records) {
       </thead>
       <tbody class="divide-y divide-slate-100">
         ${rows.map((r, i) => `
-          <tr class="hover:bg-slate-50/50 transition-colors">
+         <tr class="hover:bg-slate-50/50 transition-colors">
             <td class="py-3 px-2 font-bold text-slate-500">${i + 1}</td>
             <td class="py-3 px-4 text-left font-bold text-slate-800">
               <span class="w-2.5 h-2.5 rounded-full inline-block mr-2" style="background:${bc_deptColor(r.name)}"></span>
@@ -2762,8 +2762,8 @@ function bc_renderDeptChart(records) {
             <td class="py-3 px-4 text-right">
                <div class="flex items-center justify-end gap-3">
                  <div class="w-24 h-2 bg-slate-100 rounded-full overflow-hidden flex">
-                   <div class="h-full" style="width:${r.pYes}\%; background:${bc_deptColor(r.name)}"></div>
-                   <div class="h-full" style="width:${r.pNo}\%; background:${bc_lighten(bc_deptColor(r.name), 0.5)}"></div>
+                   <div class="h-full" style="width:${r.pYes}%; background:${bc_deptColor(r.name)}"></div>
+                   <div class="h-full" style="width:${r.pNo}%; background:${bc_lighten(bc_deptColor(r.name), 0.5)}"></div>
                  </div>
                  <span class="font-bold text-xs text-slate-800 w-12">${r.pYes.toFixed(2)}%</span>
                </div>
@@ -2775,84 +2775,111 @@ function bc_renderDeptChart(records) {
   `;
 }
 
+<comment-tag id="1" text="แก้บัคการสลับคลาสของปุ่ม และปรับปรุงให้กราฟและตารางเปลี่ยนสีตามสถานะการกดเพื่อให้ดูข้อมูลได้ชัดเจนขึ้น" type="suggestion">// สลับดู % ปฏิบัติ / % ไม่ปฏิบัติ
+function bc_setDeptItemMetric(m) {
+  bc_deptItemMetric = m;
+  const btnYes = document.getElementById('bc_deptItemBtn-yes');
+  const btnNo = document.getElementById('bc_deptItemBtn-no');
+  
+  // กำหนดคลาสปุ่มให้ชัดเจน ป้องกันบัคจากการ replace ผิดพลาด
+  if (m === 'yes') {
+    btnYes.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-blue-600 text-white shadow-sm";
+    btnNo.className = "px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-800 hover:bg-slate-200";
+  } else {
+    btnYes.className = "px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-800 hover:bg-slate-200";
+    btnNo.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-yellow-500 text-white shadow-sm";
+  }
+  
+  // โหลดกราฟและตารางใหม่
+  bc_renderDeptItemChart(bc_getFilteredRecords());
+}
+
 // กราฟที่ 2: หน่วยงาน x รายข้อ + ตาราง
 function bc_renderDeptItemChart(records) {
-  const canvas = document.getElementById('bc_deptItemChartCanvas');
-  const emptyEl = document.getElementById('bc_deptItemEmpty');
-  const head = document.getElementById('bc_deptItemTableHead');
-  const body = document.getElementById('bc_deptItemTableBody');
-  if (!canvas) return;
-  if (bc_deptItemChartInstance) { bc_deptItemChartInstance.destroy(); bc_deptItemChartInstance = null; }
+  const canvas = document.getElementById('bc_deptItemChartCanvas');
+  const emptyEl = document.getElementById('bc_deptItemEmpty');
+  const head = document.getElementById('bc_deptItemTableHead');
+  const body = document.getElementById('bc_deptItemTableBody');
+  if (!canvas) return;
+  if (bc_deptItemChartInstance) { bc_deptItemChartInstance.destroy(); bc_deptItemChartInstance = null; }
 
-  const rows = bc_aggregateByDept(records);
-  if (rows.length === 0) { emptyEl.classList.remove('hidden'); head.innerHTML = ''; body.innerHTML = ''; return; }
-  emptyEl.classList.add('hidden');
+  const rows = bc_aggregateByDept(records);
+  if (rows.length === 0) { emptyEl.classList.remove('hidden'); head.innerHTML = ''; body.innerHTML = ''; return; }
+  emptyEl.classList.add('hidden');
 
-  const isYes = bc_deptItemMetric === 'yes';
-  const itemNums = Array.from({ length: bc_TOTAL_ITEMS }, (_, k) => k + 1);
-  const pct = (c) => { const t = c.yes + c.no; return t > 0 ? ((isYes ? c.yes : c.no) / t) * 100 : 0; };
+  const isYes = bc_deptItemMetric === 'yes';
+  const itemNums = Array.from({ length: bc_TOTAL_ITEMS }, (_, k) => k + 1);
+  const pct = (c) => { const t = c.yes + c.no; return t > 0 ? ((isYes ? c.yes : c.no) / t) * 100 : 0; };
 
-  bc_deptItemChartInstance = new Chart(canvas.getContext('2d'), {
-    type: 'bar',
-    data: {
-      labels: itemNums.map(i => `ข้อ ${i}`),
-      datasets: rows.map((d, k) => ({
-        label: d.name,
-        data: itemNums.map(i => Number(pct(d.items[i]).toFixed(2))),
-        backgroundColor: bc_deptColor(d.name),
-        borderRadius: 3
-      }))
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      scales: {
-        y: { beginAtZero: true, max: 100, ticks: { stepSize: 20, callback: v => v + '%', font: { family: 'Prompt', size: 10 } } },
-        x: { ticks: { font: { family: 'Prompt', size: 10 } } }
-      },
-      plugins: {
-        legend: { position: 'bottom', labels: { font: { family: 'Prompt', size: 12 } } },
-        tooltip: {
-          callbacks: {
-            title: items => { const n = items[0].dataIndex + 1; const t = bc_checkListData[n]; return `ข้อ ${n}. ${t.length > 50 ? t.slice(0, 50) + '...' : t}`; },
-            label: c => {
-              const cnt = rows[c.datasetIndex].items[c.dataIndex + 1];
-              const t = cnt.yes + cnt.no;
-              return ` ${c.dataset.label}: ${Number(c.raw).toFixed(2)}% (${isYes ? cnt.yes : cnt.no}/${t})`;
-            }
-          }
-        }
-      }
-    }
-  });
+  bc_deptItemChartInstance = new Chart(canvas.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: itemNums.map(i => `ข้อ ${i}`),
+      datasets: rows.map((d, k) => ({
+        label: d.name,
+        data: itemNums.map(i => Number(pct(d.items[i]).toFixed(2))),
+        // ถ้าดู "ไม่ปฏิบัติ" จะใช้สีอ่อนและมีขอบ เพื่อให้แยกจาก "ปฏิบัติ"
+        backgroundColor: isYes ? bc_deptColor(d.name) : bc_lighten(bc_deptColor(d.name), 0.5),
+        borderColor: isYes ? 'transparent' : bc_deptColor(d.name),
+        borderWidth: isYes ? 0 : 1.5,
+        borderRadius: 3
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        y: { beginAtZero: true, max: 100, ticks: { stepSize: 20, callback: v => v + '%', font: { family: 'Prompt', size: 10 } } },
+        x: { ticks: { font: { family: 'Prompt', size: 10 } } }
+      },
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { family: 'Prompt', size: 12 } } },
+        datalabels: { display: false }, // ปิดตัวเลขบนกราฟเพื่อความสะอาดตา
+        tooltip: {
+          callbacks: {
+            title: items => { const n = items[0].dataIndex + 1; const t = bc_checkListData[n]; return `ข้อ ${n}. ${t.length > 50 ? t.slice(0, 50) + '...' : t}`; },
+            label: c => {
+              const cnt = rows[c.datasetIndex].items[c.dataIndex + 1];
+              const t = cnt.yes + cnt.no;
+              return ` ${c.dataset.label}: ${Number(c.raw).toFixed(2)}% (${isYes ? cnt.yes : cnt.no}/${t})`;
+            }
+          }
+        }
+      }
+    }
+  });
 
-  // ตารางสรุป
-  head.innerHTML = `<tr class="bg-slate-50 text-slate-500 text-xs">
-    <th class="px-3 py-2.5 text-left font-bold sticky left-0 bg-slate-50 z-10">หน่วยงาน</th>
-    ${itemNums.map(i => `<th class="px-2 py-2.5 text-center font-semibold" title="${bc_esc(bc_checkListData[i])}">ข้อ ${i}</th>`).join('')}
-    <th class="px-3 py-2.5 text-center font-bold bg-blue-50 text-blue-700">รวม</th>
-  </tr>`;
+  // ตารางสรุป (ปรับโทนสีส่วนหัวตารางแยกตาม ปฏิบัติ / ไม่ปฏิบัติ)
+  head.innerHTML = `<tr class="bg-slate-50 text-slate-500 text-xs">
+    <th class="px-3 py-2.5 text-left font-bold sticky left-0 bg-slate-50 z-10 shadow-[1px_0_0_0_#f1f5f9]">หน่วยงาน</th>
+    ${itemNums.map(i => `<th class="px-2 py-2.5 text-center font-semibold" title="${bc_esc(bc_checkListData[i])}">ข้อ ${i}</th>`).join('')}
+    <th class="px-3 py-2.5 text-center font-bold ${isYes ? 'bg-blue-50 text-blue-700' : 'bg-yellow-50 text-yellow-700'}">รวม</th>
+  </tr>`;
 
-  const cellCls = (p) => isYes
-    ? (p >= 80 ? 'bg-blue-50 text-blue-700' : (p >= 60 ? 'bg-sky-50 text-sky-700' : 'bg-yellow-50 text-yellow-700'))
-    : (p === 0 ? 'text-slate-400' : (p >= 40 ? 'bg-yellow-200 text-yellow-900' : 'bg-yellow-50 text-yellow-700'));
+  // ไฮไลต์เซลล์ (แดง/เหลือง) ถ้านี่เป็นหน้า "ไม่ปฏิบัติ"
+  const cellCls = (p) => isYes
+    ? (p >= 80 ? 'bg-blue-50 text-blue-700' : (p >= 60 ? 'bg-sky-50 text-sky-700' : 'bg-yellow-50 text-yellow-700'))
+    : (p === 0 ? 'text-slate-400' : (p >= 50 ? 'bg-red-50 text-red-600' : 'bg-yellow-50 text-yellow-600'));
 
-  const cell = (c) => {
-    const t = c.yes + c.no;
-    if (!t) return `<td class="px-2 py-2 text-center text-slate-300">-</td>`;
-    const p = pct(c);
-    return `<td class="px-2 py-2 text-center ${cellCls(p)}"><span class="block text-xs font-bold">${p.toFixed(1)}%</span><span class="block text-[10px] opacity-70">${isYes ? c.yes : c.no}/${t}</span></td>`;
-  };
+  const cell = (c) => {
+    const t = c.yes + c.no;
+    if (!t) return `<td class="px-2 py-2 text-center text-slate-300 border-t border-slate-50">-</td>`;
+    const p = pct(c);
+    return `<td class="px-2 py-2 text-center border-t border-slate-50 ${cellCls(p)}">
+              <span class="block text-xs font-bold">${p.toFixed(1)}%</span>
+              <span class="block text-[10px] opacity-70">${isYes ? c.yes : c.no}/${t}</span>
+            </td>`;
+  };
 
-  body.innerHTML = rows.map((d, k) => `
-    <tr class="hover:bg-slate-50/60">
-      <td class="px-3 py-2 font-bold text-slate-700 sticky left-0 bg-white z-10 whitespace-nowrap">
-        <span class="inline-block w-2.5 h-2.5 rounded-full mr-1.5" style="background:${bc_deptColor(d.name)}"></span>${bc_esc(d.name)}
-        <span class="block text-[10px] font-normal text-slate-400 pl-4">${d.n} ครั้ง</span>
-      </td>
-      ${itemNums.map(i => cell(d.items[i])).join('')}
-      ${cell({ yes: d.yes, no: d.no }).replace('px-2 py-2', 'px-3 py-2 font-bold bg-blue-50/40')}
-    </tr>`).join('');
-}
+  body.innerHTML = rows.map((d, k) => `
+    <tr class="hover:bg-slate-50/80 transition-colors">
+      <td class="px-3 py-2 font-bold text-slate-700 sticky left-0 bg-white z-10 whitespace-nowrap shadow-[1px_0_0_0_#f1f5f9] border-t border-slate-50">
+        <span class="inline-block w-2.5 h-2.5 rounded-full mr-1.5" style="background:${bc_deptColor(d.name)}"></span>${bc_esc(d.name)}
+        <span class="block text-[10px] font-normal text-slate-400 pl-4">${d.n} ครั้ง</span>
+      </td>
+      ${itemNums.map(i => cell(d.items[i])).join('')}
+      ${cell({ yes: d.yes, no: d.no }).replace('px-2 py-2', `px-3 py-2 font-bold ${isYes ? 'bg-blue-50' : 'bg-yellow-50'}`)}
+    </tr>`).join('');
+}</comment-tag>
     function bc_renderReports() {
       const records = bc_getFilteredRecords(); const total = records.length;
       document.getElementById('bc_repTotalEvaluations').innerText = total;
