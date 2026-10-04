@@ -2619,10 +2619,17 @@ function bc_aggregateByDept(records) {
   records.forEach(r => {
     const name = (r.department || '').trim() || 'ไม่ระบุ';
     if (!g[name]) {
-      g[name] = { name, n: 0, yes: 0, no: 0, items: {} };
+      // เพิ่ม fullPass เข้ามาเพื่อใช้นับในตาราง
+      g[name] = { name, n: 0, yes: 0, no: 0, fullPass: 0, items: {} };
       for (let i = 1; i <= bc_TOTAL_ITEMS; i++) g[name].items[i] = { yes: 0, no: 0 };
     }
     g[name].n++;
+    
+    // ถ้ารวมแล้วได้ 100% ให้นับเพิ่ม
+    if (Number(r.complianceRate) === 100) {
+      g[name].fullPass++;
+    }
+
     for (let i = 1; i <= bc_TOTAL_ITEMS; i++) {
       const v = r.items[i];
       if (v === 'ปฏิบัติ') { g[name].yes++; g[name].items[i].yes++; }
@@ -2634,7 +2641,7 @@ function bc_aggregateByDept(records) {
     d.pYes = d.total > 0 ? (d.yes / d.total) * 100 : 0;
     d.pNo = d.total > 0 ? (d.no / d.total) * 100 : 0;
     return d;
-  }).sort((a, b) => b.pYes - a.pYes);
+  }).sort((a, b) => b.pYes - a.pYes); // เรียงตามเปอร์เซ็นต์จากมากไปน้อย
 }
 
 // กราฟที่ 1: ภาพรวมแต่ละหน่วยงาน (Grouped Bar)
