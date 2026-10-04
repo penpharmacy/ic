@@ -365,6 +365,25 @@
   </div>
   <p class="text-[11px] text-slate-400 mt-3">แต่ละแท่งคือข้อที่ประเมิน ความยาวรวมคือจำนวนครั้งทั้งหมด แบ่งสีตามหน่วยงาน (เลื่อนเมาส์/แตะเพื่อดู % ของแต่ละหน่วยงาน)</p>
 </div>
+         <!-- การ์ด 4: หน่วยงาน x รายข้อ (%) แท่งแนวตั้ง -->
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+  <div class="pb-3 mb-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <h3 class="font-bold text-slate-800 text-sm md:text-base">เปรียบเทียบแต่ละหน่วยงาน รายข้อ (%)</h3>
+    <div class="flex gap-1 bg-slate-100 p-1 rounded-xl self-start">
+      <button id="bc_deptPctBtn-yes" onclick="bc_setDeptPctMode('yes')" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow-sm transition-all">ปฏิบัติ</button>
+      <button id="bc_deptPctBtn-no" onclick="bc_setDeptPctMode('no')" class="px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-600 transition-all">ไม่ปฏิบัติ</button>
+    </div>
+  </div>
+  <div class="overflow-x-auto">
+    <div id="bc_deptPctWrap" class="relative" style="height:420px; min-width:900px;">
+      <canvas id="bc_deptPctCanvas"></canvas>
+      <div id="bc_deptPctEmpty" class="absolute inset-0 bg-white flex flex-col items-center justify-center text-slate-400 hidden">
+        <p class="text-xs font-semibold">ไม่พบข้อมูลตามตัวกรองช่วงเวลาดังกล่าว</p>
+      </div>
+    </div>
+  </div>
+  <p class="text-[11px] text-slate-400 mt-3">% คำนวณจากจำนวนครั้งที่ประเมินข้อนั้นของแต่ละหน่วยงาน (บนมือถือเลื่อนซ้าย-ขวาเพื่อดูครบทุกข้อ)</p>
+</div>
           <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
             <div class="pb-3 mb-4 border-b border-slate-100 flex justify-between items-center">
               <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center space-x-2">
