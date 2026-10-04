@@ -2619,17 +2619,10 @@ function bc_aggregateByDept(records) {
   records.forEach(r => {
     const name = (r.department || '').trim() || 'ไม่ระบุ';
     if (!g[name]) {
-      // เพิ่ม fullPass เข้ามาเพื่อใช้นับในตาราง
-      g[name] = { name, n: 0, yes: 0, no: 0, fullPass: 0, items: {} };
+      g[name] = { name, n: 0, yes: 0, no: 0, items: {} };
       for (let i = 1; i <= bc_TOTAL_ITEMS; i++) g[name].items[i] = { yes: 0, no: 0 };
     }
     g[name].n++;
-    
-    // ถ้ารวมแล้วได้ 100% ให้นับเพิ่ม
-    if (Number(r.complianceRate) === 100) {
-      g[name].fullPass++;
-    }
-
     for (let i = 1; i <= bc_TOTAL_ITEMS; i++) {
       const v = r.items[i];
       if (v === 'ปฏิบัติ') { g[name].yes++; g[name].items[i].yes++; }
@@ -2641,11 +2634,10 @@ function bc_aggregateByDept(records) {
     d.pYes = d.total > 0 ? (d.yes / d.total) * 100 : 0;
     d.pNo = d.total > 0 ? (d.no / d.total) * 100 : 0;
     return d;
-  }).sort((a, b) => b.pYes - a.pYes); // เรียงตามเปอร์เซ็นต์จากมากไปน้อย
+  }).sort((a, b) => b.pYes - a.pYes);
 }
 
 // กราฟที่ 1: ภาพรวมแต่ละหน่วยงาน (Grouped Bar)
-// กราฟที่ 2: ภาพรวมแต่ละหน่วยงาน (Horizontal Stacked Bar)
 function bc_renderDeptChart(records) {
   const canvas = document.getElementById('bc_deptChartCanvas');
   const emptyEl = document.getElementById('bc_deptChartEmpty');
@@ -2657,74 +2649,48 @@ function bc_renderDeptChart(records) {
   if (rows.length === 0) { emptyEl.classList.remove('hidden'); sumEl.innerHTML = ''; return; }
   emptyEl.classList.add('hidden');
 
-  // แทรก Legend แบบกำหนดเอง (สีเข้ม/สีอ่อน) ไปที่ Header ของการ์ด
-  const cardHeader = canvas.closest('.bg-white').querySelector('.border-b');
-  if (cardHeader && !cardHeader.querySelector('.custom-legend')) {
-    cardHeader.innerHTML += `
-      <div class="custom-legend bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100 text-[10px] font-bold text-slate-500 flex items-center gap-2">
-        <span>สีเข้ม = ปฏิบัติ</span>
-        <span class="w-1 h-1 rounded-full bg-slate-300"></span>
-        <span>สีอ่อน = ไม่ปฏิบัติ</span>
-      </div>
-    `;
-    // ซ่อน label "คิดจากข้อที่บันทึกจริง" ของเดิม
-    const oldLabel = cardHeader.querySelector('span.bg-slate-100.px-2\\.5');
-    if(oldLabel) oldLabel.style.display = 'none';
-  }
-
   bc_deptChartInstance = new Chart(canvas.getContext('2d'), {
     type: 'bar',
     plugins: [ChartDataLabels],
     data: {
       labels: rows.map(r => r.name),
-      datasets: [
-        {
-          label: 'ปฏิบัติ (%)',
-          data: rows.map(r => Number(r.pYes.toFixed(2))),
-          counts: rows.map(r => r.yes),
-          backgroundColor: rows.map(r => bc_deptColor(r.name)),
-          borderWidth: 0,
-          borderRadius: rows.map(r => r.pNo === 0 ? 4 : { topLeft: 4, bottomLeft: 4, topRight: 0, bottomRight: 0 }) // มนแค่หัวถ้า 100%
-        },
-        {
-          label: 'ไม่ปฏิบัติ (%)',
-          data: rows.map(r => Number(r.pNo.toFixed(2))),
-          counts: rows.map(r => r.no),
-          backgroundColor: rows.map(r => bc_lighten(bc_deptColor(r.name), 0.5)),
-          borderWidth: 0,
-          borderRadius: { topRight: 4, bottomRight: 4, topLeft: 0, bottomLeft: 0 }
-        }
-      ]
+     datasets: [
+  {
+    label: 'ปฏิบัติ (%)',
+    data: rows.map(r => Number(r.pYes.toFixed(2))),
+    counts: rows.map(r => r.yes),
+    backgroundColor: rows.map(r => bc_deptColor(r.name)),
+    borderRadius: 4
+  },
+  {
+    label: 'ไม่ปฏิบัติ (%)',
+    data: rows.map(r => Number(r.pNo.toFixed(2))),
+    counts: rows.map(r => r.no),
+    backgroundColor: rows.map(r => bc_lighten(bc_deptColor(r.name), 0.6)),
+    borderColor: rows.map(r => bc_deptColor(r.name)),
+    borderWidth: 1.5,
+    borderRadius: 4
+  }
+]
     },
     options: {
-      indexAxis: 'y', // เปลี่ยนเป็นแนวนอน
       responsive: true, maintainAspectRatio: false,
       scales: {
-        x: { 
-          stacked: true, // ทำให้ซ้อนกัน
-          max: 100, 
-          ticks: { stepSize: 10, callback: v => v + '%', font: { family: 'Prompt', size: 10 } },
-          grid: { color: '#f1f5f9' }
-        },
-        y: { 
-          stacked: true, // ทำให้ซ้อนกัน
-          ticks: { font: { family: 'Prompt', size: 11, weight: 'bold' } },
-          grid: { display: false }
-        }
+        y: { beginAtZero: true, max: 110, ticks: { stepSize: 20, callback: v => v <= 100 ? v + '%' : '', font: { family: 'Prompt', size: 10 } } },
+        x: { ticks: { font: { family: 'Prompt', size: 11 } } }
       },
       plugins: {
-        legend: { display: false }, // ซ่อน Legend มาตรฐานของ Chart.js
-        datalabels: { 
-          color: '#ffffff', 
-          anchor: 'center', 
-          align: 'center',
-          font: { family: 'Prompt', size: 11, weight: 'bold' }, 
-          formatter: (v, context) => {
-            if(v === 0) return ''; // ถ้าเป็น 0 ไม่ต้องแสดงข้อความ
-            const count = context.dataset.counts[context.dataIndex];
-            return `${v.toFixed(2)}% (${count})`; 
-          } 
-        },
+       legend: {
+  position: 'bottom',
+  labels: {
+    font: { family: 'Prompt', size: 12 },
+    generateLabels: () => [
+      { text: 'ปฏิบัติ (สีเข้ม)', fillStyle: '#475569', strokeStyle: '#475569', datasetIndex: 0 },
+      { text: 'ไม่ปฏิบัติ (สีอ่อน)', fillStyle: '#CBD5E1', strokeStyle: '#475569', lineWidth: 1.5, datasetIndex: 1 }
+    ]
+  }
+},
+        datalabels: { anchor: 'end', align: 'end', color: '#1e293b', font: { family: 'Prompt', size: 10, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' },
         tooltip: {
           callbacks: {
             label: c => ` ${c.dataset.label}: ${Number(c.raw).toFixed(2)}% (${c.dataset.counts[c.dataIndex]}/${rows[c.dataIndex].total} ข้อ)`,
@@ -2732,154 +2698,113 @@ function bc_renderDeptChart(records) {
           }
         }
       },
-      layout: { padding: { top: 10, bottom: 10 } }
+      layout: { padding: { top: 20 } }
     }
   });
 
-  // สร้างตารางสรุปด้านล่างให้ตรงตามรูปแบบในรูป
-  sumEl.className = "mt-6 overflow-x-auto";
-  sumEl.innerHTML = `
-    <table class="w-full text-sm text-center min-w-[600px]">
-      <thead>
-        <tr class="text-slate-400 text-xs border-b border-slate-100 bg-slate-50">
-          <th class="py-3 px-2 font-bold w-16">อันดับ</th>
-          <th class="py-3 px-4 text-left font-bold">หน่วยงาน</th>
-          <th class="py-3 px-2 font-bold">ประเมิน (ครั้ง)</th>
-          <th class="py-3 px-2 font-bold">ผ่าน 100% (ครั้ง)</th>
-          <th class="py-3 px-4 text-right font-bold w-48">อัตราการปฏิบัติ</th>
-        </tr>
-      </thead>
-      <tbody class="divide-y divide-slate-100">
-        ${rows.map((r, i) => `
-         <tr class="hover:bg-slate-50/50 transition-colors">
-            <td class="py-3 px-2 font-bold text-slate-500">${i + 1}</td>
-            <td class="py-3 px-4 text-left font-bold text-slate-800">
-              <span class="w-2.5 h-2.5 rounded-full inline-block mr-2" style="background:${bc_deptColor(r.name)}"></span>
-              ${bc_esc(r.name)}
-            </td>
-            <td class="py-3 px-2 font-medium text-slate-600">${r.n}</td>
-            <td class="py-3 px-2 font-medium ${r.fullPass > 0 ? 'text-blue-600' : 'text-slate-400'}">${r.fullPass}</td>
-            <td class="py-3 px-4 text-right">
-               <div class="flex items-center justify-end gap-3">
-                 <div class="w-24 h-2 bg-slate-100 rounded-full overflow-hidden flex">
-                   <div class="h-full" style="width:${r.pYes}%; background:${bc_deptColor(r.name)}"></div>
-                   <div class="h-full" style="width:${r.pNo}%; background:${bc_lighten(bc_deptColor(r.name), 0.5)}"></div>
-                 </div>
-                 <span class="font-bold text-xs text-slate-800 w-12">${r.pYes.toFixed(2)}%</span>
-               </div>
-            </td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>
-  `;
+  sumEl.innerHTML = rows.map(r => `
+    <div class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2.5">
+      <div class="flex items-center justify-between">
+        <span class="text-sm font-bold text-slate-700 flex items-center gap-2">
+  <span class="w-3 h-3 rounded-full" style="background:${bc_deptColor(r.name)}"></span>${bc_esc(r.name)}
+</span>
+        <span class="text-[10px] text-slate-400">${r.n} ครั้ง</span>
+      </div>
+      <div class="flex justify-between text-xs mt-1.5">
+        <span class="font-bold text-blue-600">ปฏิบัติ ${r.pYes.toFixed(2)}% <span class="font-normal text-slate-400">(${r.yes}/${r.total})</span></span>
+        <span class="font-bold text-yellow-600">ไม่ปฏิบัติ ${r.pNo.toFixed(2)}% <span class="font-normal text-slate-400">(${r.no}/${r.total})</span></span>
+      </div>
+    </div>`).join('');
 }
 
-<comment-tag id="1" text="แก้บัคการสลับคลาสของปุ่ม และปรับปรุงให้กราฟและตารางเปลี่ยนสีตามสถานะการกดเพื่อให้ดูข้อมูลได้ชัดเจนขึ้น" type="suggestion">// สลับดู % ปฏิบัติ / % ไม่ปฏิบัติ
+// สลับดู % ปฏิบัติ / % ไม่ปฏิบัติ
 function bc_setDeptItemMetric(m) {
-  bc_deptItemMetric = m;
-  const btnYes = document.getElementById('bc_deptItemBtn-yes');
-  const btnNo = document.getElementById('bc_deptItemBtn-no');
-  
-  // กำหนดคลาสปุ่มให้ชัดเจน ป้องกันบัคจากการ replace ผิดพลาด
-  if (m === 'yes') {
-    btnYes.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-blue-600 text-white shadow-sm";
-    btnNo.className = "px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-800 hover:bg-slate-200";
-  } else {
-    btnYes.className = "px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-800 hover:bg-slate-200";
-    btnNo.className = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-yellow-500 text-white shadow-sm";
-  }
-  
-  // โหลดกราฟและตารางใหม่
-  bc_renderDeptItemChart(bc_getFilteredRecords());
+  bc_deptItemMetric = m;
+  const on = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-blue-600 text-white shadow-sm";
+  const off = "px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-800";
+  document.getElementById('bc_deptItemBtn-yes').className = m === 'yes' ? on : off;
+  document.getElementById('bc_deptItemBtn-no').className = m === 'no' ? on.replace('bg-blue-600', 'bg-yellow-500') : off;
+  bc_renderDeptItemChart(bc_getFilteredRecords());
 }
 
 // กราฟที่ 2: หน่วยงาน x รายข้อ + ตาราง
 function bc_renderDeptItemChart(records) {
-  const canvas = document.getElementById('bc_deptItemChartCanvas');
-  const emptyEl = document.getElementById('bc_deptItemEmpty');
-  const head = document.getElementById('bc_deptItemTableHead');
-  const body = document.getElementById('bc_deptItemTableBody');
-  if (!canvas) return;
-  if (bc_deptItemChartInstance) { bc_deptItemChartInstance.destroy(); bc_deptItemChartInstance = null; }
+  const canvas = document.getElementById('bc_deptItemChartCanvas');
+  const emptyEl = document.getElementById('bc_deptItemEmpty');
+  const head = document.getElementById('bc_deptItemTableHead');
+  const body = document.getElementById('bc_deptItemTableBody');
+  if (!canvas) return;
+  if (bc_deptItemChartInstance) { bc_deptItemChartInstance.destroy(); bc_deptItemChartInstance = null; }
 
-  const rows = bc_aggregateByDept(records);
-  if (rows.length === 0) { emptyEl.classList.remove('hidden'); head.innerHTML = ''; body.innerHTML = ''; return; }
-  emptyEl.classList.add('hidden');
+  const rows = bc_aggregateByDept(records);
+  if (rows.length === 0) { emptyEl.classList.remove('hidden'); head.innerHTML = ''; body.innerHTML = ''; return; }
+  emptyEl.classList.add('hidden');
 
-  const isYes = bc_deptItemMetric === 'yes';
-  const itemNums = Array.from({ length: bc_TOTAL_ITEMS }, (_, k) => k + 1);
-  const pct = (c) => { const t = c.yes + c.no; return t > 0 ? ((isYes ? c.yes : c.no) / t) * 100 : 0; };
+  const isYes = bc_deptItemMetric === 'yes';
+  const itemNums = Array.from({ length: bc_TOTAL_ITEMS }, (_, k) => k + 1);
+  const pct = (c) => { const t = c.yes + c.no; return t > 0 ? ((isYes ? c.yes : c.no) / t) * 100 : 0; };
 
-  bc_deptItemChartInstance = new Chart(canvas.getContext('2d'), {
-    type: 'bar',
-    data: {
-      labels: itemNums.map(i => `ข้อ ${i}`),
-      datasets: rows.map((d, k) => ({
-        label: d.name,
-        data: itemNums.map(i => Number(pct(d.items[i]).toFixed(2))),
-        // ถ้าดู "ไม่ปฏิบัติ" จะใช้สีอ่อนและมีขอบ เพื่อให้แยกจาก "ปฏิบัติ"
-        backgroundColor: isYes ? bc_deptColor(d.name) : bc_lighten(bc_deptColor(d.name), 0.5),
-        borderColor: isYes ? 'transparent' : bc_deptColor(d.name),
-        borderWidth: isYes ? 0 : 1.5,
-        borderRadius: 3
-      }))
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      scales: {
-        y: { beginAtZero: true, max: 100, ticks: { stepSize: 20, callback: v => v + '%', font: { family: 'Prompt', size: 10 } } },
-        x: { ticks: { font: { family: 'Prompt', size: 10 } } }
-      },
-      plugins: {
-        legend: { position: 'bottom', labels: { font: { family: 'Prompt', size: 12 } } },
-        datalabels: { display: false }, // ปิดตัวเลขบนกราฟเพื่อความสะอาดตา
-        tooltip: {
-          callbacks: {
-            title: items => { const n = items[0].dataIndex + 1; const t = bc_checkListData[n]; return `ข้อ ${n}. ${t.length > 50 ? t.slice(0, 50) + '...' : t}`; },
-            label: c => {
-              const cnt = rows[c.datasetIndex].items[c.dataIndex + 1];
-              const t = cnt.yes + cnt.no;
-              return ` ${c.dataset.label}: ${Number(c.raw).toFixed(2)}% (${isYes ? cnt.yes : cnt.no}/${t})`;
-            }
-          }
-        }
-      }
-    }
-  });
+  bc_deptItemChartInstance = new Chart(canvas.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: itemNums.map(i => `ข้อ ${i}`),
+      datasets: rows.map((d, k) => ({
+        label: d.name,
+        data: itemNums.map(i => Number(pct(d.items[i]).toFixed(2))),
+        backgroundColor: bc_deptColor(d.name),
+        borderRadius: 3
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        y: { beginAtZero: true, max: 100, ticks: { stepSize: 20, callback: v => v + '%', font: { family: 'Prompt', size: 10 } } },
+        x: { ticks: { font: { family: 'Prompt', size: 10 } } }
+      },
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { family: 'Prompt', size: 12 } } },
+        tooltip: {
+          callbacks: {
+            title: items => { const n = items[0].dataIndex + 1; const t = bc_checkListData[n]; return `ข้อ ${n}. ${t.length > 50 ? t.slice(0, 50) + '...' : t}`; },
+            label: c => {
+              const cnt = rows[c.datasetIndex].items[c.dataIndex + 1];
+              const t = cnt.yes + cnt.no;
+              return ` ${c.dataset.label}: ${Number(c.raw).toFixed(2)}% (${isYes ? cnt.yes : cnt.no}/${t})`;
+            }
+          }
+        }
+      }
+    }
+  });
 
-  // ตารางสรุป (ปรับโทนสีส่วนหัวตารางแยกตาม ปฏิบัติ / ไม่ปฏิบัติ)
-  head.innerHTML = `<tr class="bg-slate-50 text-slate-500 text-xs">
-    <th class="px-3 py-2.5 text-left font-bold sticky left-0 bg-slate-50 z-10 shadow-[1px_0_0_0_#f1f5f9]">หน่วยงาน</th>
-    ${itemNums.map(i => `<th class="px-2 py-2.5 text-center font-semibold" title="${bc_esc(bc_checkListData[i])}">ข้อ ${i}</th>`).join('')}
-    <th class="px-3 py-2.5 text-center font-bold ${isYes ? 'bg-blue-50 text-blue-700' : 'bg-yellow-50 text-yellow-700'}">รวม</th>
-  </tr>`;
+  // ตารางสรุป
+  head.innerHTML = `<tr class="bg-slate-50 text-slate-500 text-xs">
+    <th class="px-3 py-2.5 text-left font-bold sticky left-0 bg-slate-50 z-10">หน่วยงาน</th>
+    ${itemNums.map(i => `<th class="px-2 py-2.5 text-center font-semibold" title="${bc_esc(bc_checkListData[i])}">ข้อ ${i}</th>`).join('')}
+    <th class="px-3 py-2.5 text-center font-bold bg-blue-50 text-blue-700">รวม</th>
+  </tr>`;
 
-  // ไฮไลต์เซลล์ (แดง/เหลือง) ถ้านี่เป็นหน้า "ไม่ปฏิบัติ"
-  const cellCls = (p) => isYes
-    ? (p >= 80 ? 'bg-blue-50 text-blue-700' : (p >= 60 ? 'bg-sky-50 text-sky-700' : 'bg-yellow-50 text-yellow-700'))
-    : (p === 0 ? 'text-slate-400' : (p >= 50 ? 'bg-red-50 text-red-600' : 'bg-yellow-50 text-yellow-600'));
+  const cellCls = (p) => isYes
+    ? (p >= 80 ? 'bg-blue-50 text-blue-700' : (p >= 60 ? 'bg-sky-50 text-sky-700' : 'bg-yellow-50 text-yellow-700'))
+    : (p === 0 ? 'text-slate-400' : (p >= 40 ? 'bg-yellow-200 text-yellow-900' : 'bg-yellow-50 text-yellow-700'));
 
-  const cell = (c) => {
-    const t = c.yes + c.no;
-    if (!t) return `<td class="px-2 py-2 text-center text-slate-300 border-t border-slate-50">-</td>`;
-    const p = pct(c);
-    return `<td class="px-2 py-2 text-center border-t border-slate-50 ${cellCls(p)}">
-              <span class="block text-xs font-bold">${p.toFixed(1)}%</span>
-              <span class="block text-[10px] opacity-70">${isYes ? c.yes : c.no}/${t}</span>
-            </td>`;
-  };
+  const cell = (c) => {
+    const t = c.yes + c.no;
+    if (!t) return `<td class="px-2 py-2 text-center text-slate-300">-</td>`;
+    const p = pct(c);
+    return `<td class="px-2 py-2 text-center ${cellCls(p)}"><span class="block text-xs font-bold">${p.toFixed(1)}%</span><span class="block text-[10px] opacity-70">${isYes ? c.yes : c.no}/${t}</span></td>`;
+  };
 
-  body.innerHTML = rows.map((d, k) => `
-    <tr class="hover:bg-slate-50/80 transition-colors">
-      <td class="px-3 py-2 font-bold text-slate-700 sticky left-0 bg-white z-10 whitespace-nowrap shadow-[1px_0_0_0_#f1f5f9] border-t border-slate-50">
-        <span class="inline-block w-2.5 h-2.5 rounded-full mr-1.5" style="background:${bc_deptColor(d.name)}"></span>${bc_esc(d.name)}
-        <span class="block text-[10px] font-normal text-slate-400 pl-4">${d.n} ครั้ง</span>
-      </td>
-      ${itemNums.map(i => cell(d.items[i])).join('')}
-      ${cell({ yes: d.yes, no: d.no }).replace('px-2 py-2', `px-3 py-2 font-bold ${isYes ? 'bg-blue-50' : 'bg-yellow-50'}`)}
-    </tr>`).join('');
-}</comment-tag>
+  body.innerHTML = rows.map((d, k) => `
+    <tr class="hover:bg-slate-50/60">
+      <td class="px-3 py-2 font-bold text-slate-700 sticky left-0 bg-white z-10 whitespace-nowrap">
+        <span class="inline-block w-2.5 h-2.5 rounded-full mr-1.5" style="background:${bc_deptColor(d.name)}"></span>${bc_esc(d.name)}
+        <span class="block text-[10px] font-normal text-slate-400 pl-4">${d.n} ครั้ง</span>
+      </td>
+      ${itemNums.map(i => cell(d.items[i])).join('')}
+      ${cell({ yes: d.yes, no: d.no }).replace('px-2 py-2', 'px-3 py-2 font-bold bg-blue-50/40')}
+    </tr>`).join('');
+}
     function bc_renderReports() {
       const records = bc_getFilteredRecords(); const total = records.length;
       document.getElementById('bc_repTotalEvaluations').innerText = total;
