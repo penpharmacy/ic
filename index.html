@@ -2649,12 +2649,12 @@ function bc_renderDeptChart(records) {
   if (rows.length === 0) { emptyEl.classList.remove('hidden'); sumEl.innerHTML = ''; return; }
   emptyEl.classList.add('hidden');
 
-  bc_deptChartInstance = new Chart(canvas.getContext('2d'), {
+ bc_deptChartInstance = new Chart(canvas.getContext('2d'), {
     type: 'bar',
     plugins: [ChartDataLabels],
     data: {
       labels: rows.map(r => r.name),
-     datasets: [
+      datasets: [
   {
     label: 'ปฏิบัติ (%)',
     data: rows.map(r => Number(r.pYes.toFixed(2))),
@@ -2674,10 +2674,12 @@ function bc_renderDeptChart(records) {
 ]
     },
     options: {
+      indexAxis: 'y', // เพิ่มส่วนนี้เพื่อให้กราฟเป็นแนวนอน
       responsive: true, maintainAspectRatio: false,
       scales: {
-        y: { beginAtZero: true, max: 110, ticks: { stepSize: 20, callback: v => v <= 100 ? v + '%' : '', font: { family: 'Prompt', size: 10 } } },
-        x: { ticks: { font: { family: 'Prompt', size: 11 } } }
+        // สลับ x และ y 
+        x: { beginAtZero: true, max: 110, ticks: { stepSize: 20, callback: v => v <= 100 ? v + '%' : '', font: { family: 'Prompt', size: 10 } } },
+        y: { ticks: { font: { family: 'Prompt', size: 11 } } }
       },
       plugins: {
        legend: {
@@ -2698,7 +2700,7 @@ function bc_renderDeptChart(records) {
           }
         }
       },
-      layout: { padding: { top: 20 } }
+      layout: { padding: { top: 10, right: 40, bottom: 10 } } // ปรับ padding ขวาเพื่อไม่ให้ตัวเลข DataLabels ขาดหาย
     }
   });
 
