@@ -2752,7 +2752,77 @@ function bc_renderDeptItemChart(records) {
     }
   });
 }
- 
+
+    // ===== กราฟ 4: หน่วยงาน x รายข้อ (%) แท่งแนวตั้ง =====
+let bc_deptPctChartInstance = null;
+let bc_deptPctMode = 'yes';
+
+function bc_setDeptPctMode(mode) {
+  bc_deptPctMode = mode;
+  document.getElementById('bc_deptPctBtn-yes').className = 'px-4 py-1.5 rounded-lg text-xs transition-all ' + (mode === 'yes' ? 'font-bold bg-blue-600 text-white shadow-sm' : 'font-semibold text-slate-600');
+  document.getElementById('bc_deptPctBtn-no').className = 'px-4 py-1.5 rounded-lg text-xs transition-all ' + (mode === 'no' ? 'font-bold bg-yellow-500 text-white shadow-sm' : 'font-semibold text-slate-600');
+  bc_renderDeptPctChart(bc_getFilteredRecords());
+}
+
+function bc_renderDeptPctChart(records) {
+  const canvas = document.getElementById('bc_deptPctCanvas');
+  const emptyEl = document.getElementById('bc_deptPctEmpty');
+  if (!canvas) return;
+  if (bc_deptPctChartInstance) { bc_deptPctChartInstance.destroy(); bc_deptPctChartInstance = null; }
+
+  const depts = [...new Set(records.map(bc_deptName))].sort();
+  if (depts.length === 0) { emptyEl.classList.remove('hidden'); return; }
+  emptyEl.classList.add('hidden');
+
+  const key = bc_deptPctMode === 'yes' ? 'ปฏิบัติ' : 'ไม่ปฏิบัติ';
+  const labels = [];
+  for (let i = 1; i <= bc_TOTAL_ITEMS; i++) labels.push('ข้อ ' + i);
+
+  const datasets = depts.map(dept => {
+    const recs = records.filter(r => bc_deptName(r) === dept);
+    const pcts = [], hits = [], totals = [];
+    for (let i = 1; i <= bc_TOTAL_ITEMS; i++) {
+      let hit = 0, tot = 0;
+      recs.forEach(r => {
+        const v = r.items[i];
+        if (v === 'ปฏิบัติ' || v === 'ไม่ปฏิบัติ') { tot++; if (v === key) hit++; }
+      });
+      hits.push(hit); totals.push(tot);
+      pcts.push(tot > 0 ? +(hit / tot * 100).toFixed(2) : 0);
+    }
+    return { label: dept, data: pcts, hits, totals, backgroundColor: bc_deptColor(dept), borderRadius: 3 };
+  });
+
+  bc_deptPctChartInstance = new Chart(canvas.getContext('2d'), {
+    type: 'bar',
+    plugins: [ChartDataLabels],
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      layout: { padding: { top: 24 } },
+      scales: {
+        y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%', font: { family: 'Prompt', size: 10 } } },
+        x: { ticks: { font: { family: 'Prompt', size: 11 } } }
+      },
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { family: 'Prompt', size: 12 }, usePointStyle: true } },
+        datalabels: {
+          display: c => c.dataset.totals[c.dataIndex] > 0,
+          anchor: 'end', align: 'end', rotation: -90,
+          color: '#1e293b',
+          font: { family: 'Prompt', size: 9, weight: 'bold' },
+          formatter: v => Number(v).toFixed(0) + '%'
+        },
+        tooltip: {
+          callbacks: {
+            title: items => `${items[0].label}: ${bc_checkListData[items[0].dataIndex + 1]}`,
+            label: c => ` ${c.dataset.label}: ${key} ${Number(c.raw).toFixed(2)}% (${c.dataset.hits[c.dataIndex]}/${c.dataset.totals[c.dataIndex]} ครั้ง)`
+          }
+        }
+      }
+    }
+  });
+}
 
     function bc_renderReports() {
       const records = bc_getFilteredRecords(); const total = records.length;
