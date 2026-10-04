@@ -317,20 +317,67 @@
         </div>
 
         <div class="grid grid-cols-1 gap-6">
-          <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
-            <div class="pb-3 mb-4 border-b border-slate-100 flex justify-between items-center">
-              <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center space-x-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></span><span>เปรียบเทียบ ปฏิบัติ/ไม่ปฏิบัติ รายข้อ (%)</span>
-              </h3>
-              <span class="text-[10px] bg-slate-100 px-2.5 py-1 rounded-full font-bold text-slate-500">เกณฑ์ 15 ข้อ</span>
-            </div>
-            <div class="relative min-h-[450px] w-full flex items-center justify-center">
-              <canvas id="bc_comparisonChartCanvas"></canvas>
-              <div id="bc_chart1EmptyState" class="absolute inset-0 bg-white flex flex-col items-center justify-center text-slate-400 space-y-2 hidden">
-                <i data-lucide="bar-chart-2" class="w-12 h-12 text-slate-300"></i><p class="text-xs font-semibold">ไม่พบข้อมูลประเมินตามตัวกรองช่วงเวลาดังกล่าว</p>
-              </div>
-            </div>
-          </div>
+         <!-- การ์ด 1: เปรียบเทียบรายข้อ (ภาพรวม) -->
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+  <div class="pb-3 mb-4 border-b border-slate-100 flex justify-between items-center">
+    <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center space-x-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></span><span>เปรียบเทียบ ปฏิบัติ/ไม่ปฏิบัติ รายข้อ (%)</span>
+    </h3>
+    <span class="text-[10px] bg-slate-100 px-2.5 py-1 rounded-full font-bold text-slate-500">เกณฑ์ 15 ข้อ</span>
+  </div>
+  <div class="relative min-h-[450px] w-full flex items-center justify-center">
+    <canvas id="bc_comparisonChartCanvas"></canvas>
+    <div id="bc_chart1EmptyState" class="absolute inset-0 bg-white flex flex-col items-center justify-center text-slate-400 space-y-2 hidden">
+      <i data-lucide="bar-chart-2" class="w-12 h-12 text-slate-300"></i><p class="text-xs font-semibold">ไม่พบข้อมูลประเมินตามตัวกรองช่วงเวลาดังกล่าว</p>
+    </div>
+  </div>
+</div>
+
+<!-- การ์ด 2: เปรียบเทียบตามหน่วยงาน (ภาพรวม) -->
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+  <div class="pb-3 mb-4 border-b border-slate-100 flex flex-wrap gap-2 justify-between items-center">
+    <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center space-x-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span><span>เปรียบเทียบอัตราการปฏิบัติตามหน่วยงาน (%)</span>
+    </h3>
+    <span class="text-[10px] bg-slate-100 px-2.5 py-1 rounded-full font-bold text-slate-500">คิดจากข้อที่บันทึกจริง</span>
+  </div>
+  <div class="relative w-full" style="height:340px;">
+    <canvas id="bc_deptChartCanvas"></canvas>
+    <div id="bc_deptChartEmpty" class="absolute inset-0 bg-white flex flex-col items-center justify-center text-slate-400 hidden">
+      <i data-lucide="bar-chart-2" class="w-10 h-10 text-slate-300"></i><p class="text-xs font-semibold mt-2">ไม่พบข้อมูลตามตัวกรองช่วงเวลาดังกล่าว</p>
+    </div>
+  </div>
+  <div id="bc_deptSummary" class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2"></div>
+</div>
+
+<!-- การ์ด 3: เปรียบเทียบหน่วยงาน x รายข้อ -->
+<div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+  <div class="pb-3 mb-4 border-b border-slate-100 flex flex-wrap gap-3 justify-between items-center">
+    <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center space-x-2">
+      <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span><span>เปรียบเทียบแต่ละหน่วยงาน รายข้อ (%)</span>
+    </h3>
+    <div class="flex gap-1 bg-slate-100 p-1 rounded-xl">
+      <button id="bc_deptItemBtn-yes" onclick="bc_setDeptItemMetric('yes')" class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-blue-600 text-white shadow-sm">% ปฏิบัติ</button>
+      <button id="bc_deptItemBtn-no" onclick="bc_setDeptItemMetric('no')" class="px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-800">% ไม่ปฏิบัติ</button>
+    </div>
+  </div>
+  <div class="relative w-full">
+    <div class="overflow-x-auto">
+      <div class="relative" style="min-width:900px;height:420px;">
+        <canvas id="bc_deptItemChartCanvas"></canvas>
+      </div>
+    </div>
+    <div id="bc_deptItemEmpty" class="absolute inset-0 bg-white flex flex-col items-center justify-center text-slate-400 hidden">
+      <i data-lucide="bar-chart-2" class="w-10 h-10 text-slate-300"></i><p class="text-xs font-semibold mt-2">ไม่พบข้อมูลตามตัวกรองช่วงเวลาดังกล่าว</p>
+    </div>
+  </div>
+  <div class="mt-6 overflow-x-auto rounded-xl border border-slate-100">
+    <table class="w-full text-sm border-collapse min-w-[900px]">
+      <thead id="bc_deptItemTableHead"></thead>
+      <tbody id="bc_deptItemTableBody" class="divide-y divide-slate-100"></tbody>
+    </table>
+  </div>
+</div>
           <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
             <div class="pb-3 mb-4 border-b border-slate-100 flex justify-between items-center">
               <h3 class="font-bold text-slate-800 text-sm md:text-base flex items-center space-x-2">
@@ -2537,6 +2584,227 @@
       return recs;
     }
 
+  let bc_deptChartInstance = null;
+let bc_deptItemChartInstance = null;
+let bc_deptItemMetric = 'yes';
+const bc_DEPT_PALETTE = ['#2563EB', '#38BDF8', '#FACC15', '#10B981', '#A855F7', '#F97316', '#EC4899', '#64748B'];
+// สีประจำหน่วยงาน (ชื่อเดียวกัน = สีเดียวกันทุกกราฟ)
+const bc_DEPT_COLORS = {
+  'OPD': '#2563EB', 'W4': '#10B981', 'W5': '#F97316',
+  'LR': '#A855F7', 'ER': '#EF4444', 'อื่นๆ': '#64748B', 'ไม่ระบุ': '#94A3B8'
+};
+const bc_DEPT_FALLBACK = ['#0EA5E9', '#EC4899', '#84CC16', '#F59E0B', '#14B8A6', '#8B5CF6'];
+
+function bc_deptColor(name) {
+  if (bc_DEPT_COLORS[name]) return bc_DEPT_COLORS[name];
+  let h = 0;
+  for (const ch of String(name)) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return bc_DEPT_FALLBACK[h % bc_DEPT_FALLBACK.length];
+}
+
+// ทำสีให้อ่อนลง (ผสมกับสีขาว) amount 0-1
+function bc_lighten(hex, amount = 0.6) {
+  const n = parseInt(hex.slice(1), 16);
+  const mix = c => Math.round(c + (255 - c) * amount);
+  const r = mix((n >> 16) & 255), g = mix((n >> 8) & 255), b = mix(n & 255);
+  return `rgb(${r}, ${g}, ${b})`;
+}
+function bc_esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+// รวมข้อมูลตามหน่วยงาน โดยนับจากค่าจริงที่บันทึก (ปฏิบัติ / ไม่ปฏิบัติ)
+function bc_aggregateByDept(records) {
+  const g = {};
+  records.forEach(r => {
+    const name = (r.department || '').trim() || 'ไม่ระบุ';
+    if (!g[name]) {
+      g[name] = { name, n: 0, yes: 0, no: 0, items: {} };
+      for (let i = 1; i <= bc_TOTAL_ITEMS; i++) g[name].items[i] = { yes: 0, no: 0 };
+    }
+    g[name].n++;
+    for (let i = 1; i <= bc_TOTAL_ITEMS; i++) {
+      const v = r.items[i];
+      if (v === 'ปฏิบัติ') { g[name].yes++; g[name].items[i].yes++; }
+      else if (v === 'ไม่ปฏิบัติ') { g[name].no++; g[name].items[i].no++; }
+    }
+  });
+  return Object.values(g).map(d => {
+    d.total = d.yes + d.no;
+    d.pYes = d.total > 0 ? (d.yes / d.total) * 100 : 0;
+    d.pNo = d.total > 0 ? (d.no / d.total) * 100 : 0;
+    return d;
+  }).sort((a, b) => b.pYes - a.pYes);
+}
+
+// กราฟที่ 1: ภาพรวมแต่ละหน่วยงาน (Grouped Bar)
+function bc_renderDeptChart(records) {
+  const canvas = document.getElementById('bc_deptChartCanvas');
+  const emptyEl = document.getElementById('bc_deptChartEmpty');
+  const sumEl = document.getElementById('bc_deptSummary');
+  if (!canvas) return;
+  if (bc_deptChartInstance) { bc_deptChartInstance.destroy(); bc_deptChartInstance = null; }
+
+  const rows = bc_aggregateByDept(records);
+  if (rows.length === 0) { emptyEl.classList.remove('hidden'); sumEl.innerHTML = ''; return; }
+  emptyEl.classList.add('hidden');
+
+  bc_deptChartInstance = new Chart(canvas.getContext('2d'), {
+    type: 'bar',
+    plugins: [ChartDataLabels],
+    data: {
+      labels: rows.map(r => r.name),
+     datasets: [
+  {
+    label: 'ปฏิบัติ (%)',
+    data: rows.map(r => Number(r.pYes.toFixed(2))),
+    counts: rows.map(r => r.yes),
+    backgroundColor: rows.map(r => bc_deptColor(r.name)),
+    borderRadius: 4
+  },
+  {
+    label: 'ไม่ปฏิบัติ (%)',
+    data: rows.map(r => Number(r.pNo.toFixed(2))),
+    counts: rows.map(r => r.no),
+    backgroundColor: rows.map(r => bc_lighten(bc_deptColor(r.name), 0.6)),
+    borderColor: rows.map(r => bc_deptColor(r.name)),
+    borderWidth: 1.5,
+    borderRadius: 4
+  }
+]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        y: { beginAtZero: true, max: 110, ticks: { stepSize: 20, callback: v => v <= 100 ? v + '%' : '', font: { family: 'Prompt', size: 10 } } },
+        x: { ticks: { font: { family: 'Prompt', size: 11 } } }
+      },
+      plugins: {
+       legend: {
+  position: 'bottom',
+  labels: {
+    font: { family: 'Prompt', size: 12 },
+    generateLabels: () => [
+      { text: 'ปฏิบัติ (สีเข้ม)', fillStyle: '#475569', strokeStyle: '#475569', datasetIndex: 0 },
+      { text: 'ไม่ปฏิบัติ (สีอ่อน)', fillStyle: '#CBD5E1', strokeStyle: '#475569', lineWidth: 1.5, datasetIndex: 1 }
+    ]
+  }
+},
+        datalabels: { anchor: 'end', align: 'end', color: '#1e293b', font: { family: 'Prompt', size: 10, weight: 'bold' }, formatter: v => v.toFixed(2) + '%' },
+        tooltip: {
+          callbacks: {
+            label: c => ` ${c.dataset.label}: ${Number(c.raw).toFixed(2)}% (${c.dataset.counts[c.dataIndex]}/${rows[c.dataIndex].total} ข้อ)`,
+            afterBody: items => `ประเมิน ${rows[items[0].dataIndex].n} ครั้ง`
+          }
+        }
+      },
+      layout: { padding: { top: 20 } }
+    }
+  });
+
+  sumEl.innerHTML = rows.map(r => `
+    <div class="bg-slate-50 border border-slate-100 rounded-xl px-3 py-2.5">
+      <div class="flex items-center justify-between">
+        <span class="text-sm font-bold text-slate-700 flex items-center gap-2">
+  <span class="w-3 h-3 rounded-full" style="background:${bc_deptColor(r.name)}"></span>${bc_esc(r.name)}
+</span>
+        <span class="text-[10px] text-slate-400">${r.n} ครั้ง</span>
+      </div>
+      <div class="flex justify-between text-xs mt-1.5">
+        <span class="font-bold text-blue-600">ปฏิบัติ ${r.pYes.toFixed(2)}% <span class="font-normal text-slate-400">(${r.yes}/${r.total})</span></span>
+        <span class="font-bold text-yellow-600">ไม่ปฏิบัติ ${r.pNo.toFixed(2)}% <span class="font-normal text-slate-400">(${r.no}/${r.total})</span></span>
+      </div>
+    </div>`).join('');
+}
+
+// สลับดู % ปฏิบัติ / % ไม่ปฏิบัติ
+function bc_setDeptItemMetric(m) {
+  bc_deptItemMetric = m;
+  const on = "px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-blue-600 text-white shadow-sm";
+  const off = "px-4 py-1.5 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-800";
+  document.getElementById('bc_deptItemBtn-yes').className = m === 'yes' ? on : off;
+  document.getElementById('bc_deptItemBtn-no').className = m === 'no' ? on.replace('bg-blue-600', 'bg-yellow-500') : off;
+  bc_renderDeptItemChart(bc_getFilteredRecords());
+}
+
+// กราฟที่ 2: หน่วยงาน x รายข้อ + ตาราง
+function bc_renderDeptItemChart(records) {
+  const canvas = document.getElementById('bc_deptItemChartCanvas');
+  const emptyEl = document.getElementById('bc_deptItemEmpty');
+  const head = document.getElementById('bc_deptItemTableHead');
+  const body = document.getElementById('bc_deptItemTableBody');
+  if (!canvas) return;
+  if (bc_deptItemChartInstance) { bc_deptItemChartInstance.destroy(); bc_deptItemChartInstance = null; }
+
+  const rows = bc_aggregateByDept(records);
+  if (rows.length === 0) { emptyEl.classList.remove('hidden'); head.innerHTML = ''; body.innerHTML = ''; return; }
+  emptyEl.classList.add('hidden');
+
+  const isYes = bc_deptItemMetric === 'yes';
+  const itemNums = Array.from({ length: bc_TOTAL_ITEMS }, (_, k) => k + 1);
+  const pct = (c) => { const t = c.yes + c.no; return t > 0 ? ((isYes ? c.yes : c.no) / t) * 100 : 0; };
+
+  bc_deptItemChartInstance = new Chart(canvas.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: itemNums.map(i => `ข้อ ${i}`),
+      datasets: rows.map((d, k) => ({
+        label: d.name,
+        data: itemNums.map(i => Number(pct(d.items[i]).toFixed(2))),
+        backgroundColor: bc_deptColor(d.name),
+        borderRadius: 3
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        y: { beginAtZero: true, max: 100, ticks: { stepSize: 20, callback: v => v + '%', font: { family: 'Prompt', size: 10 } } },
+        x: { ticks: { font: { family: 'Prompt', size: 10 } } }
+      },
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { family: 'Prompt', size: 12 } } },
+        tooltip: {
+          callbacks: {
+            title: items => { const n = items[0].dataIndex + 1; const t = bc_checkListData[n]; return `ข้อ ${n}. ${t.length > 50 ? t.slice(0, 50) + '...' : t}`; },
+            label: c => {
+              const cnt = rows[c.datasetIndex].items[c.dataIndex + 1];
+              const t = cnt.yes + cnt.no;
+              return ` ${c.dataset.label}: ${Number(c.raw).toFixed(2)}% (${isYes ? cnt.yes : cnt.no}/${t})`;
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // ตารางสรุป
+  head.innerHTML = `<tr class="bg-slate-50 text-slate-500 text-xs">
+    <th class="px-3 py-2.5 text-left font-bold sticky left-0 bg-slate-50 z-10">หน่วยงาน</th>
+    ${itemNums.map(i => `<th class="px-2 py-2.5 text-center font-semibold" title="${bc_esc(bc_checkListData[i])}">ข้อ ${i}</th>`).join('')}
+    <th class="px-3 py-2.5 text-center font-bold bg-blue-50 text-blue-700">รวม</th>
+  </tr>`;
+
+  const cellCls = (p) => isYes
+    ? (p >= 80 ? 'bg-blue-50 text-blue-700' : (p >= 60 ? 'bg-sky-50 text-sky-700' : 'bg-yellow-50 text-yellow-700'))
+    : (p === 0 ? 'text-slate-400' : (p >= 40 ? 'bg-yellow-200 text-yellow-900' : 'bg-yellow-50 text-yellow-700'));
+
+  const cell = (c) => {
+    const t = c.yes + c.no;
+    if (!t) return `<td class="px-2 py-2 text-center text-slate-300">-</td>`;
+    const p = pct(c);
+    return `<td class="px-2 py-2 text-center ${cellCls(p)}"><span class="block text-xs font-bold">${p.toFixed(1)}%</span><span class="block text-[10px] opacity-70">${isYes ? c.yes : c.no}/${t}</span></td>`;
+  };
+
+  body.innerHTML = rows.map((d, k) => `
+    <tr class="hover:bg-slate-50/60">
+      <td class="px-3 py-2 font-bold text-slate-700 sticky left-0 bg-white z-10 whitespace-nowrap">
+        <span class="inline-block w-2.5 h-2.5 rounded-full mr-1.5" style="background:${bc_deptColor(d.name)}"></span>${bc_esc(d.name)}
+        <span class="block text-[10px] font-normal text-slate-400 pl-4">${d.n} ครั้ง</span>
+      </td>
+      ${itemNums.map(i => cell(d.items[i])).join('')}
+      ${cell({ yes: d.yes, no: d.no }).replace('px-2 py-2', 'px-3 py-2 font-bold bg-blue-50/40')}
+    </tr>`).join('');
+}
     function bc_renderReports() {
       const records = bc_getFilteredRecords(); const total = records.length;
       document.getElementById('bc_repTotalEvaluations').innerText = total;
@@ -2545,16 +2813,19 @@
         document.getElementById('bc_itemBreakdownContainer').innerHTML = `<div class="text-center py-6 text-slate-400 text-sm w-full lg:col-span-2">ไม่พบข้อมูลสถิติตามเงื่อนไขที่เลือก</div>`;
         document.getElementById('bc_chart1EmptyState').classList.remove('hidden'); if(bc_comparisonChartInstance) bc_comparisonChartInstance.destroy();
         document.getElementById('bc_chart2EmptyState').classList.remove('hidden'); const listContainer = document.getElementById('bc_nonComplianceListContainer'); if(listContainer) listContainer.innerHTML = '';
+         bc_renderDeptChart([]); bc_renderDeptItemChart([]);
         return;
       }
       document.getElementById('bc_chart1EmptyState').classList.add('hidden');
+       bc_renderDeptChart(records);
+      bc_renderDeptItemChart(records);
       let fullC = 0; records.forEach(r => { if(r.complianceRate === 100) fullC++; });
       document.getElementById('bc_repFullComplianceCount').innerText = fullC; document.getElementById('bc_repFullCompliancePct').innerText = `${((fullC/total)*100).toFixed(2)}% (${fullC}/${total}) ของทั้งหมด`;
       const stats = {}; for(let i=1; i<=bc_TOTAL_ITEMS; i++) stats[i] = { yes:0, no:0, text: bc_checkListData[i] };
       records.forEach(r => { for(let i=1; i<=bc_TOTAL_ITEMS; i++) { if(r.items[i]==='ปฏิบัติ') stats[i].yes++; else if(r.items[i]==='ไม่ปฏิบัติ') stats[i].no++; } });
       let lowestRate = 101, lowestItems = []; let html = "", lbls=[], dYes=[], dNo=[], fYes=[], fNo=[]; let ncDataArr = []; const tempDiv = document.createElement("div");
       for(let i=1; i<=bc_TOTAL_ITEMS; i++) {
-        const totalEval = stats[i].yes + stats[i].no; const pYes = totalEval > 0 ? Number(((stats[i].yes / totalEval) * 100).toFixed(2)) : 0; const pNo = totalEval > 0 ? Number((100 - pYes).toFixed(2)) : 0;
+        const totalEval = stats[i].yes + stats[i].no; const pYes = totalEval > 0 ? Number(((stats[i].yes / totalEval) * 100).toFixed(2)) : 0; const pNo = totalEval > 0 ? Number(((stats[i].no / totalEval) * 100).toFixed(2)) : 0;
         lbls.push(`ข้อ ${i}`); dYes.push(pYes); dNo.push(pNo); fYes.push(`${stats[i].yes}/${totalEval}`); fNo.push(`${stats[i].no}/${totalEval}`);
         tempDiv.innerHTML = stats[i].text; const cleanText = tempDiv.textContent || tempDiv.innerText || "";
         if(totalEval > 0) { if(pYes < lowestRate) { lowestRate = pYes; lowestItems = [{ item: i, text: cleanText }]; } else if(pYes === lowestRate) { lowestItems.push({ item: i, text: cleanText }); } }
@@ -2953,6 +3224,7 @@
         document.getElementById('mdr_itemBreakdownContainer').innerHTML = `<div class="text-center py-6 text-slate-400 text-sm w-full lg:col-span-2">ไม่พบข้อมูลสถิติตามเงื่อนไขที่เลือก</div>`;
         document.getElementById('mdr_chart1EmptyState').classList.remove('hidden'); if(mdr_comparisonChartInstance) mdr_comparisonChartInstance.destroy();
         document.getElementById('mdr_chart2EmptyState').classList.remove('hidden'); const listContainer = document.getElementById('mdr_nonComplianceListContainer'); if(listContainer) listContainer.innerHTML = '';
+      
         return;
       }
       document.getElementById('mdr_chart1EmptyState').classList.add('hidden');
